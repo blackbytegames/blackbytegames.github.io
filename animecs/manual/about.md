@@ -117,10 +117,10 @@ Animecs follows the [Unity Asset Store EULA](../license.md).
 
 **Next Steps:**
 
-- [Getting Started →](getting-started.md) - Install Animecs and bake your first character
-- [Architecture →](architecture.md) - Deep dive into how the system works
+- [Getting Started →](manual/getting-started.md) - Install Animecs and bake your first character
+- [Architecture →](manual/architecture.md) - Deep dive into how the system works
 - [Tutorials →](tutorials/basic-setup.md) - Step-by-step guides for common tasks
-- [Limitations →](limitations.md) - What Animecs doesn't support
+- [Limitations →](manual/limitations.md) - What Animecs doesn't support
 
 ## Support
 - Email: [sridogames@gmail.com](mailto:sridogames@gmail.com) - Direct support
