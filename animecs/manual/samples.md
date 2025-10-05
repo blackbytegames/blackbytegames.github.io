@@ -172,25 +172,6 @@ The sample is fully documented and Burst-compiled. Copy any system or pattern yo
 **Implementing LOD?** See Booth 4's manual override pattern  
 **Debugging animations?** Check Booth 8's debug visualization setup
 
-## Requirements
-
-- Unity 2022.3 or newer
-- Entities 1.0.16+
-- Entities Graphics 1.0.16+
-- URP or HDRP
-
-The sample runs in the editor and builds. No additional setup required.
-
-## Troubleshooting
-
-**Characters don't animate** - Ensure subscene is in "Auto Load" mode. Check Console for baking errors.
-
-**No audio on footsteps** - Audio clip expected at `Resources/Audio/Footstep`. Sample works without it, just silently.
-
-**Camera doesn't move** - `AnimecsBoothManager` requires main camera. Tag your camera with "MainCamera" tag.
-
-**Performance issues** - The sample runs 8 characters simultaneously. Reduce booth count if needed.
-
 ---
 
 **Next:** [Limitations →](../limitations.md) - What Animecs doesn't support
