@@ -701,10 +701,30 @@
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
 
-                    // Links in markdown are already relative to animecs/ root
-                    // Just use them directly
-                    loadContent(href);
-                    window.location.hash = href;
+                    let finalPath = href;
+
+                    // If link starts with ../, resolve it relative to current file
+                    if (href.startsWith('../')) {
+                        let currentPath = window.location.hash.substring(1) || 'manual/about.md';
+                        let pathParts = currentPath.split('/');
+                        pathParts.pop(); // Remove filename
+
+                        let linkParts = href.split('/');
+
+                        // Process each part
+                        for (let part of linkParts) {
+                            if (part === '..') {
+                                pathParts.pop(); // Go up one directory
+                            } else if (part !== '.') {
+                                pathParts.push(part);
+                            }
+                        }
+
+                        finalPath = pathParts.join('/');
+                    }
+
+                    loadContent(finalPath);
+                    window.location.hash = finalPath;
                 });
             }
         });
