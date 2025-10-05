@@ -750,7 +750,18 @@
             e.preventDefault();
             const section = tab.dataset.section;
 
-            if (!section) return; // Changelog tab
+            // Handle Changelog separately
+            if (section === 'changelog') {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById('breadcrumbSection').textContent = 'Resources';
+                document.getElementById('breadcrumbCurrent').textContent = 'Changelog';
+                document.getElementById('leftNav').innerHTML = '';
+                loadContent('changelog.md');
+                return;
+            }
+
+            if (!section) return;
 
             // Update active tab
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
