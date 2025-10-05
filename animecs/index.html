@@ -6,22 +6,10 @@
     <title>Animecs Documentation</title>
 
     <style>
-        /* ===== TRUE UNITY THEME ===== */
-        :root {
-            --unity-dark: #222c37;
-            --unity-sidebar: #f7f7f7;
-            --unity-border: #d8d8d8;
-            --unity-blue: #0066cc;
-            --unity-blue-hover: #0052a3;
-            --unity-text: #222222;
-            --unity-text-light: #707070;
-            --unity-code-bg: #f6f8fa;
-            --unity-code-border: #e1e4e8;
-            --unity-note-bg: #e7f3ff;
-            --unity-note-border: #4a9eff;
-        }
-
+        /* ===== UNITY EXACT CLONE ===== */
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
 
@@ -29,138 +17,187 @@
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             font-size: 14px;
             line-height: 1.7;
-            color: var(--unity-text);
-            margin: 0;
-            padding: 0;
+            color: #222;
             background: white;
         }
 
-        /* ===== FIXED HEADER BAR ===== */
+        /* ===== TOP HEADER (BLACK BAR) ===== */
         .unity-header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             height: 50px;
-            background: var(--unity-dark);
-            z-index: 999;
+            background: #1a1a1a;
+            z-index: 1000;
             display: flex;
             align-items: center;
             padding: 0 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .unity-header-logo {
+        .unity-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-right: 32px;
+            text-decoration: none;
+        }
+
+        .unity-logo img {
+            height: 32px;
+            width: auto;
+        }
+
+        .unity-logo span {
             color: white;
             font-size: 15px;
             font-weight: 500;
-            margin-right: 32px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
-        .unity-header-logo:hover {
-            opacity: 0.9;
-        }
-
-        .unity-header-breadcrumb {
-            color: rgba(255,255,255,0.65);
-            font-size: 14px;
-        }
-
-        .unity-header-breadcrumb a {
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-        }
-
-        .unity-header-breadcrumb a:hover {
-            color: white;
-        }
-
-        .unity-header-tabs {
+        .unity-nav {
             display: flex;
             gap: 24px;
-            margin-left: auto;
-            margin-right: 24px;
         }
 
-        .unity-header-tabs a {
-            color: rgba(255,255,255,0.8);
+        .unity-nav a {
+            color: rgba(255,255,255,0.85);
             text-decoration: none;
-            font-size: 13px;
+            font-size: 14px;
             padding: 15px 0;
             border-bottom: 2px solid transparent;
             transition: all 0.2s;
         }
 
-        .unity-header-tabs a:hover {
-            color: white;
-        }
-
-        .unity-header-tabs a.active {
+        .unity-nav a:hover,
+        .unity-nav a.active {
             color: white;
             border-bottom-color: white;
         }
 
-        .unity-header-store {
-            background: #00a8e6;
+        .unity-search {
+            margin-left: auto;
+            position: relative;
+        }
+
+        .unity-search input {
+            width: 280px;
+            padding: 8px 36px 8px 14px;
+            border: 1px solid #404040;
+            border-radius: 4px;
+            background: #2a2a2a;
             color: white;
-            padding: 7px 16px;
-            border-radius: 3px;
-            text-decoration: none;
             font-size: 13px;
-            font-weight: 500;
-            transition: background 0.2s;
+            outline: none;
+            transition: all 0.2s;
         }
 
-        .unity-header-store:hover {
-            background: #0088bb;
+        .unity-search input::placeholder {
+            color: #888;
         }
 
-        /* ===== SIDEBAR ===== */
-        .sidebar {
-            top: 50px !important;
-            bottom: 0 !important;
-            background: var(--unity-sidebar) !important;
-            border-right: 1px solid var(--unity-border) !important;
-            width: 280px !important;
-            padding: 0 !important;
+        .unity-search input:focus {
+            background: #333;
+            border-color: #555;
+        }
+
+        .unity-search::after {
+            content: '🔍';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.6;
+        }
+
+        /* ===== BREADCRUMB ===== */
+        .unity-breadcrumb {
+            position: fixed;
+            top: 50px;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: #f0f0f0;
+            border-bottom: 1px solid #d8d8d8;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 999;
+            font-size: 13px;
+        }
+
+        .unity-breadcrumb a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        .unity-breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .unity-breadcrumb span {
+            color: #666;
+            margin: 0 8px;
+        }
+
+        /* ===== MAIN LAYOUT (3 COLUMNS) ===== */
+        .unity-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr 250px;
+            position: fixed;
+            top: 90px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+        }
+
+        /* ===== LEFT SIDEBAR ===== */
+        .unity-sidebar-left {
+            background: #f7f7f7;
+            border-right: 1px solid #d8d8d8;
             overflow-y: auto;
+            padding: 20px 0;
+        }
+
+        .sidebar-filter {
+            padding: 0 20px 16px 20px;
+            border-bottom: 1px solid #d8d8d8;
+            margin-bottom: 16px;
+        }
+
+        .sidebar-filter input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d0d0d0;
+            border-radius: 3px;
+            font-size: 13px;
+            background: white;
+        }
+
+        .sidebar-filter input::placeholder {
+            color: #999;
         }
 
         .sidebar-nav {
-            padding: 20px 0 40px 0;
+            padding: 0;
         }
 
-        .sidebar-nav > ul {
+        .sidebar-nav ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
         .sidebar-nav li {
-            list-style: none;
-        }
-
-        /* Section headers - Unity style */
-        .sidebar-nav > ul > li > p,
-        .sidebar-nav > ul > li > strong {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: #999;
-            padding: 20px 20px 8px 20px;
             margin: 0;
         }
 
         .sidebar-nav a {
             display: block;
+            padding: 6px 20px;
             color: #333;
             text-decoration: none;
-            padding: 5px 20px;
             font-size: 13px;
             border-left: 3px solid transparent;
             transition: all 0.15s;
@@ -168,18 +205,23 @@
 
         .sidebar-nav a:hover {
             background: rgba(0,0,0,0.03);
-            color: var(--unity-blue);
+            color: #0066cc;
         }
 
         .sidebar-nav a.active {
             background: rgba(0,102,204,0.06);
-            border-left-color: var(--unity-blue);
-            color: var(--unity-blue);
+            border-left-color: #0066cc;
+            color: #0066cc;
             font-weight: 500;
         }
 
-        .sidebar-nav ul ul {
-            padding-left: 0;
+        .sidebar-nav .nav-section {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #999;
+            padding: 20px 20px 8px 20px;
         }
 
         .sidebar-nav ul ul a {
@@ -187,316 +229,454 @@
             font-size: 13px;
         }
 
-        .sidebar-nav ul ul ul a {
-            padding-left: 60px;
-            font-size: 12px;
-        }
-
         /* ===== MAIN CONTENT ===== */
-        body {
-            padding-top: 50px;
+        .unity-content {
+            background: white;
+            overflow-y: auto;
+            padding: 40px 60px 100px 60px;
         }
 
-        .content {
-            left: 280px !important;
-            top: 50px !important;
-            padding-top: 0 !important;
-        }
-
-        .markdown-section {
-            max-width: 900px;
-            padding: 40px 60px 120px 60px;
-        }
-
-        /* ===== TYPOGRAPHY - THIS IS KEY ===== */
-
-        /* Main title - Unity uses THIN fonts */
-        .markdown-section h1 {
+        /* Typography */
+        .unity-content h1 {
             font-size: 36px;
             font-weight: 300;
-            margin: 0 0 8px 0;
-            padding: 0;
-            border: none;
+            margin: 0 0 24px 0;
             color: #222;
             letter-spacing: -0.5px;
         }
 
-        /* Subtitle right after h1 */
-        .markdown-section h1 + blockquote {
-            font-size: 16px;
-            color: #555;
-            margin: 0 0 40px 0;
-            padding: 12px 20px;
-            border-left: 3px solid var(--unity-note-border);
-            background: var(--unity-note-bg);
-            font-weight: 400;
-        }
-
-        /* Section headings - Unity keeps these GRAY, not blue */
-        .markdown-section h2 {
+        .unity-content h2 {
             font-size: 26px;
             font-weight: 400;
             margin: 48px 0 20px 0;
-            padding: 0;
-            border: none;
             color: #222;
             letter-spacing: -0.3px;
         }
 
-        .markdown-section h3 {
+        .unity-content h3 {
             font-size: 20px;
             font-weight: 500;
             margin: 32px 0 16px 0;
             color: #222;
         }
 
-        .markdown-section h4 {
+        .unity-content h4 {
             font-size: 16px;
             font-weight: 600;
             margin: 24px 0 12px 0;
             color: #222;
         }
 
-        /* Body text */
-        .markdown-section p {
+        .unity-content p {
             margin: 14px 0;
             line-height: 1.75;
             color: #333;
-            font-size: 14px;
         }
 
-        /* Links - ONLY blue elements */
-        .markdown-section a {
-            color: var(--unity-blue);
+        .unity-content a {
+            color: #0066cc;
             text-decoration: none;
-            border-bottom: 1px solid transparent;
-            transition: border-color 0.2s;
         }
 
-        .markdown-section a:hover {
-            border-bottom-color: var(--unity-blue);
+        .unity-content a:hover {
+            text-decoration: underline;
         }
 
-        /* Lists */
-        .markdown-section ul,
-        .markdown-section ol {
+        .unity-content ul,
+        .unity-content ol {
             margin: 16px 0;
             padding-left: 28px;
         }
 
-        .markdown-section li {
+        .unity-content li {
             margin: 6px 0;
             line-height: 1.7;
-            color: #333;
         }
 
-        /* Strong text in lists */
-        .markdown-section li strong {
+        .unity-content strong {
             font-weight: 600;
             color: #222;
         }
 
-        /* ===== CODE BLOCKS ===== */
-        .markdown-section pre {
-            background: var(--unity-code-bg) !important;
-            border: 1px solid var(--unity-code-border);
+        /* Code */
+        .unity-content pre {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
             border-radius: 3px;
             padding: 16px;
             margin: 20px 0;
             overflow-x: auto;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.04);
         }
 
-        .markdown-section code {
+        .unity-content code {
             background: #f0f0f0;
             padding: 2px 5px;
             border-radius: 3px;
             font-size: 13px;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'Courier New', monospace;
+            font-family: Monaco, Menlo, Consolas, monospace;
             color: #c7254e;
-            border: 1px solid #ececec;
         }
 
-        .markdown-section pre > code {
+        .unity-content pre code {
             background: transparent;
             padding: 0;
-            border: none;
-            border-radius: 0;
-            font-size: 13px;
-            line-height: 1.6;
             color: #333;
+            border: none;
         }
 
-        /* ===== NOTE BOXES ===== */
-        .markdown-section blockquote {
-            border-left: 3px solid var(--unity-note-border);
-            background: var(--unity-note-bg);
+        /* Note boxes */
+        .unity-content blockquote {
+            border-left: 3px solid #4a9eff;
+            background: #e7f3ff;
             padding: 12px 16px;
             margin: 20px 0;
             border-radius: 0 3px 3px 0;
         }
 
-        .markdown-section blockquote p {
-            margin: 0;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        /* ===== TABLES ===== */
-        .markdown-section table {
+        /* Tables */
+        .unity-content table {
             width: 100%;
             border-collapse: collapse;
             margin: 24px 0;
             font-size: 13px;
         }
 
-        .markdown-section table th {
+        .unity-content table th {
             background: #fafafa;
             border: 1px solid #e0e0e0;
             padding: 10px 14px;
             text-align: left;
             font-weight: 600;
-            color: #333;
         }
 
-        .markdown-section table td {
+        .unity-content table td {
             border: 1px solid #e0e0e0;
             padding: 10px 14px;
-            color: #333;
         }
 
-        .markdown-section table tr:nth-child(even) {
+        /* ===== RIGHT SIDEBAR (IN THIS ARTICLE) ===== */
+        .unity-sidebar-right {
             background: #fafafa;
+            border-left: 1px solid #e8e8e8;
+            overflow-y: auto;
+            padding: 20px;
         }
 
-        /* ===== SEARCH ===== */
-        .search {
-            margin: 0 !important;
-            padding: 20px !important;
-            border-bottom: 1px solid var(--unity-border) !important;
-            background: var(--unity-sidebar) !important;
+        .sidebar-right-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #999;
+            margin-bottom: 12px;
         }
 
-        .search input {
-            width: 100% !important;
-            padding: 8px 12px !important;
-            border: 1px solid #d0d0d0 !important;
-            border-radius: 3px !important;
-            font-size: 13px !important;
-            background: white !important;
-            color: #333 !important;
+        .sidebar-toc {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
-        .search input:focus {
-            outline: none !important;
-            border-color: var(--unity-blue) !important;
-            box-shadow: 0 0 0 2px rgba(0,102,204,0.1) !important;
+        .sidebar-toc li {
+            margin: 0;
         }
 
-        .search input::placeholder {
-            color: #999 !important;
+        .sidebar-toc a {
+            display: block;
+            padding: 6px 0;
+            color: #555;
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.2s;
         }
 
-        /* ===== COPY CODE BUTTON ===== */
-        .docsify-copy-code-button {
-            background: var(--unity-blue) !important;
-            color: white !important;
-            font-size: 11px !important;
-            padding: 4px 10px !important;
-            border-radius: 3px !important;
+        .sidebar-toc a:hover {
+            color: #0066cc;
         }
 
-        .docsify-copy-code-button:hover {
-            background: var(--unity-blue-hover) !important;
+        .sidebar-toc a.active {
+            color: #0066cc;
+            font-weight: 500;
         }
 
-        /* ===== HIDE DEFAULT NAVBAR ===== */
-        nav.app-nav {
-            display: none !important;
+        .sidebar-toc ul {
+            list-style: none;
+            padding-left: 12px;
+            margin-top: 4px;
+        }
+
+        .sidebar-toc ul a {
+            font-size: 12px;
         }
 
         /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .unity-header-tabs {
+        @media (max-width: 1200px) {
+            .unity-layout {
+                grid-template-columns: 260px 1fr;
+            }
+
+            .unity-sidebar-right {
                 display: none;
-            }
-
-            .unity-header-breadcrumb {
-                font-size: 12px;
-            }
-
-            .sidebar {
-                transform: translateX(-280px);
-            }
-
-            .content {
-                left: 0 !important;
-            }
-
-            .markdown-section {
-                padding: 20px;
-            }
-
-            .markdown-section h1 {
-                font-size: 28px;
-            }
-
-            .markdown-section h2 {
-                font-size: 22px;
             }
         }
 
-        /* ===== SMOOTH SCROLLING ===== */
-        html {
-            scroll-behavior: smooth;
+        @media (max-width: 768px) {
+            .unity-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .unity-sidebar-left {
+                position: absolute;
+                left: -280px;
+                transition: left 0.3s;
+            }
+
+            .unity-content {
+                padding: 20px;
+            }
+
+            .unity-search input {
+                width: 180px;
+            }
+        }
+
+        /* ===== SCROLLBAR STYLING ===== */
+        .unity-sidebar-left::-webkit-scrollbar,
+        .unity-content::-webkit-scrollbar,
+        .unity-sidebar-right::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .unity-sidebar-left::-webkit-scrollbar-thumb,
+        .unity-content::-webkit-scrollbar-thumb,
+        .unity-sidebar-right::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
-<!-- Unity-style Header -->
+<!-- Top Header -->
 <div class="unity-header">
-    <a href="/" class="unity-header-logo">
-        ← Blackbyte Docs
+    <a href="/" class="unity-logo">
+        <img src="https://via.placeholder.com/32x32/ff6b00/ffffff?text=B" alt="Blackbyte">
+        <span>Blackbyte Docs</span>
     </a>
-    <div class="unity-header-breadcrumb">
-        <span>Animecs</span>
-    </div>
-    <nav class="unity-header-tabs">
+
+    <nav class="unity-nav">
         <a href="#/" class="active">Manual</a>
         <a href="#/api/">Scripting API</a>
         <a href="#/changelog">Changelog</a>
-        <a href="#/license">License</a>
     </nav>
-    <a href="https://assetstore.unity.com" class="unity-header-store">Asset Store</a>
+
+    <div class="unity-search">
+        <input type="search" placeholder="Search" id="searchInput">
+    </div>
 </div>
 
-<div id="app">Loading...</div>
+<!-- Breadcrumb -->
+<div class="unity-breadcrumb">
+    <a href="#/manual/">Manual</a>
+    <span>/</span>
+    <span id="breadcrumbCurrent">Animecs</span>
+</div>
+
+<!-- Main 3-Column Layout -->
+<div class="unity-layout">
+    <!-- Left Sidebar -->
+    <div class="unity-sidebar-left">
+        <div class="sidebar-filter">
+            <input type="text" placeholder="Enter here to filter..." id="filterInput">
+        </div>
+
+        <nav class="sidebar-nav" id="leftNav">
+            <!-- Navigation will be loaded here -->
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="unity-content" id="mainContent">
+        <!-- Content will be loaded here -->
+    </div>
+
+    <!-- Right Sidebar (Table of Contents) -->
+    <div class="unity-sidebar-right">
+        <div class="sidebar-right-title">IN THIS ARTICLE</div>
+        <ul class="sidebar-toc" id="tocList">
+            <!-- TOC will be auto-generated -->
+        </ul>
+    </div>
+</div>
+
+<!-- Marked.js for Markdown parsing -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 <script>
-    window.$docsify = {
-        name: '',
-        repo: '',
-        loadSidebar: true,
-        subMaxLevel: 3,
-        auto2top: true,
-
-        search: {
-            paths: 'auto',
-            placeholder: 'Search documentation',
-            noData: 'No results',
-            depth: 4
+    // Navigation structure
+    const navigation = [
+        { title: 'Home', url: 'README.md' },
+        {
+            section: 'Manual',
+            items: [
+                { title: 'About Animecs', url: 'manual/about.md' },
+                { title: 'Getting Started', url: 'manual/getting-started.md' },
+                { title: 'Architecture', url: 'manual/architecture.md' },
+                {
+                    title: 'Tutorials',
+                    submenu: [
+                        { title: 'Basic Setup', url: 'manual/tutorials/basic-setup.md' },
+                        { title: 'State Machines', url: 'manual/tutorials/state-machines.md' },
+                        { title: 'Blend Trees', url: 'manual/tutorials/blend-trees.md' },
+                        { title: 'LOD System', url: 'manual/tutorials/lod-system.md' },
+                        { title: 'Blend Shapes', url: 'manual/tutorials/blend-shapes.md' }
+                    ]
+                },
+                { title: 'Samples', url: 'manual/samples/README.md' },
+                { title: 'Limitations', url: 'manual/limitations.md' }
+            ]
         },
+        {
+            section: 'Scripting API',
+            items: [
+                { title: 'API Overview', url: 'api/README.md' },
+                { title: 'AnimecsController', url: 'api/controller.md' },
+                { title: 'Components', url: 'api/components.md' },
+                { title: 'Systems', url: 'api/systems.md' },
+                { title: 'Data Structures', url: 'api/data-structures.md' },
+                { title: 'Bakers', url: 'api/baker.md' }
+            ]
+        },
+        {
+            section: 'Resources',
+            items: [
+                { title: 'Changelog', url: 'changelog.md' },
+                { title: 'License', url: 'license.md' }
+            ]
+        }
+    ];
 
-        alias: {
-            '/.*/_sidebar.md': '/_sidebar.md'
+    // Build left navigation
+    function buildNavigation() {
+        const nav = document.getElementById('leftNav');
+        let html = '<ul>';
+
+        navigation.forEach(item => {
+            if (item.section) {
+                html += `<li class="nav-section">${item.section}</li>`;
+                item.items.forEach(subitem => {
+                    if (subitem.submenu) {
+                        html += `<li><a href="#">${subitem.title}</a><ul>`;
+                        subitem.submenu.forEach(sub => {
+                            html += `<li><a href="#${sub.url}">${sub.title}</a></li>`;
+                        });
+                        html += `</ul></li>`;
+                    } else {
+                        html += `<li><a href="#${subitem.url}">${subitem.title}</a></li>`;
+                    }
+                });
+            } else {
+                html += `<li><a href="#${item.url}">${item.title}</a></li>`;
+            }
+        });
+
+        html += '</ul>';
+        nav.innerHTML = html;
+    }
+
+    // Load markdown content
+    async function loadContent(file = 'README.md') {
+        try {
+            const response = await fetch(file);
+            const text = await response.text();
+            const html = marked.parse(text);
+            document.getElementById('mainContent').innerHTML = html;
+
+            // Update breadcrumb
+            const parts = file.split('/');
+            document.getElementById('breadcrumbCurrent').textContent =
+                parts[parts.length - 1].replace('.md', '').replace('-', ' ');
+
+            // Generate TOC
+            generateTOC();
+
+            // Highlight active nav
+            highlightActiveNav(file);
+        } catch (error) {
+            document.getElementById('mainContent').innerHTML =
+                `<h1>Error</h1><p>Could not load ${file}</p>`;
         }
     }
-</script>
 
-<script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
-<script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-csharp.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/docsify-copy-code@2"></script>
+    // Generate table of contents from headings
+    function generateTOC() {
+        const content = document.getElementById('mainContent');
+        const headings = content.querySelectorAll('h2, h3');
+        const tocList = document.getElementById('tocList');
+
+        let html = '';
+        headings.forEach(heading => {
+            const id = heading.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            heading.id = id;
+
+            const level = heading.tagName === 'H2' ? '' : '<ul>';
+            const levelClose = heading.tagName === 'H2' ? '' : '</ul>';
+
+            html += `${level}<li><a href="#${id}">${heading.textContent}</a></li>${levelClose}`;
+        });
+
+        tocList.innerHTML = html;
+
+        // TOC click handlers
+        tocList.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.getElementById(link.getAttribute('href').substring(1));
+                if (target) {
+                    document.querySelector('.unity-content').scrollTo({
+                        top: target.offsetTop - 20,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    }
+
+    // Highlight active navigation item
+    function highlightActiveNav(currentFile) {
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${currentFile}`) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    // Handle hash changes
+    window.addEventListener('hashchange', () => {
+        const hash = window.location.hash.substring(1) || 'README.md';
+        loadContent(hash);
+    });
+
+    // Filter sidebar
+    document.getElementById('filterInput').addEventListener('input', (e) => {
+        const filter = e.target.value.toLowerCase();
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            const text = link.textContent.toLowerCase();
+            link.style.display = text.includes(filter) ? 'block' : 'none';
+        });
+    });
+
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        // Implement search logic here
+        console.log('Search:', query);
+    });
+
+    // Initialize
+    buildNavigation();
+    const initialFile = window.location.hash.substring(1) || 'README.md';
+    loadContent(initialFile);
+</script>
 </body>
 </html>
