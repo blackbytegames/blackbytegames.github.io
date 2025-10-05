@@ -665,22 +665,29 @@
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
 
-                    let currentPath = window.location.hash.substring(1) || 'manual/about.md';
-                    let currentParts = currentPath.split('/');
-                    currentParts.pop();
+                    let finalPath;
 
-                    let targetPath = href;
-                    let hrefParts = targetPath.split('/');
+                    // If href starts with ../ or ./, it's relative to current file
+                    if (href.startsWith('../') || href.startsWith('./')) {
+                        let currentPath = window.location.hash.substring(1) || 'manual/about.md';
+                        let currentParts = currentPath.split('/');
+                        currentParts.pop(); // Remove filename
 
-                    for (let part of hrefParts) {
-                        if (part === '..') {
-                            currentParts.pop();
-                        } else if (part !== '.' && part !== '') {
-                            currentParts.push(part);
+                        let hrefParts = href.split('/');
+
+                        for (let part of hrefParts) {
+                            if (part === '..') {
+                                currentParts.pop();
+                            } else if (part !== '.' && part !== '') {
+                                currentParts.push(part);
+                            }
                         }
-                    }
 
-                    let finalPath = currentParts.join('/');
+                        finalPath = currentParts.join('/');
+                    } else {
+                        // No ../ or ./ means it's already an absolute path from animecs/ root
+                        finalPath = href;
+                    }
 
                     window.location.hash = finalPath;
                     loadContent(finalPath);
