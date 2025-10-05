@@ -655,10 +655,15 @@
         const content = document.getElementById('mainContent');
 
         content.querySelectorAll('a').forEach(link => {
-            const href = link.getAttribute('href');
+            let href = link.getAttribute('href');
 
             if (!href || href.startsWith('http') || href.startsWith('mailto:')) {
                 return;
+            }
+
+            // Strip leading # if present
+            if (href.startsWith('#')) {
+                href = href.substring(1);
             }
 
             if (href.endsWith('.md')) {
@@ -667,11 +672,10 @@
 
                     let finalPath;
 
-                    // If href starts with ../ or ./, it's relative to current file
                     if (href.startsWith('../') || href.startsWith('./')) {
                         let currentPath = window.location.hash.substring(1) || 'manual/about.md';
                         let currentParts = currentPath.split('/');
-                        currentParts.pop(); // Remove filename
+                        currentParts.pop();
 
                         let hrefParts = href.split('/');
 
@@ -685,7 +689,6 @@
 
                         finalPath = currentParts.join('/');
                     } else {
-                        // No ../ or ./ means it's already an absolute path from animecs/ root
                         finalPath = href;
                     }
 
