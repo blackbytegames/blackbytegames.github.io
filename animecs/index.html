@@ -696,32 +696,38 @@
                 return;
             }
 
-            // Only handle .md links
             if (href.endsWith('.md')) {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
 
-                    let finalPath = href;
+                    // Get current file location
+                    let currentPath = window.location.hash.substring(1) || 'manual/about.md';
+                    let currentDir = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
 
-                    // If link starts with ../, resolve it relative to current file
-                    if (href.startsWith('../')) {
-                        let currentPath = window.location.hash.substring(1) || 'manual/about.md';
-                        let pathParts = currentPath.split('/');
-                        pathParts.pop(); // Remove filename
+                    // Resolve the path
+                    let finalPath;
+                    if (href.startsWith('/')) {
+                        finalPath = href.substring(1);
+                    } else if (href.startsWith('../') || href.startsWith('./')) {
+                        // Start from current directory
+                        let parts = currentDir.split('/').filter(p => p);
+                        let hrefParts = href.split('/');
 
-                        let linkParts = href.split('/');
-
-                        // Process each part
-                        for (let part of linkParts) {
+                        for (let part of hrefParts) {
                             if (part === '..') {
-                                pathParts.pop(); // Go up one directory
-                            } else if (part !== '.') {
-                                pathParts.push(part);
+                                parts.pop();
+                            } else if (part !== '.' && part !== '') {
+                                parts.push(part);
                             }
                         }
 
-                        finalPath = pathParts.join('/');
+                        finalPath = parts.join('/');
+                    } else {
+                        // Relative to current directory
+                        finalPath = currentDir + href;
                     }
+
+                    console.log('Navigating from', currentPath, 'to', href, '→ resolved:', finalPath);
 
                     loadContent(finalPath);
                     window.location.hash = finalPath;
