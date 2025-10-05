@@ -111,7 +111,7 @@ We needed a way to use Mecanim workflows without sacrificing DOTS performance. B
 
 ## License
 
-Animecs follows the [Unity Asset Store EULA](../license.md).
+Animecs follows the [Unity Asset Store EULA](https://unity.com/legal/as-terms).
 
 ---
 

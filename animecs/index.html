@@ -677,11 +677,28 @@
             highlightActiveNav(file);
 
             // Scroll to top
-            document.querySelector('.unity-content').scrollTop = 0;
+            document.querySelector('.unity-content').scrollTop = 0
+            setupMarkdownLinks();
         } catch (error) {
             document.getElementById('mainContent').innerHTML =
                 `<h1>Error</h1><p>Could not load ${file}. Make sure the file exists.</p>`;
         }
+    }
+
+    function setupMarkdownLinks() {
+        const content = document.getElementById('mainContent');
+
+        content.querySelectorAll('a').forEach(link => {
+            const href = link.getAttribute('href');
+
+            // Check if it's an internal .md link
+            if (href && href.endsWith('.md')) {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loadContent(href);
+                });
+            }
+        });
     }
 
     // Generate table of contents from headings
