@@ -669,30 +669,23 @@
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
 
-                    let finalPath;
+                    // Get current directory
                     let currentPath = window.location.hash.substring(1) || 'manual/about.md';
                     let currentDir = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
 
-                    if (href.startsWith('../') || href.startsWith('./')) {
-                        // Relative path with ../ or ./
-                        let currentParts = currentDir.split('/').filter(p => p);
-                        let hrefParts = href.split('/');
+                    // Resolve path relative to current directory
+                    let parts = currentDir.split('/').filter(p => p);
+                    let hrefParts = href.split('/');
 
-                        for (let part of hrefParts) {
-                            if (part === '..') {
-                                currentParts.pop();
-                            } else if (part !== '.' && part !== '') {
-                                currentParts.push(part);
-                            }
+                    for (let part of hrefParts) {
+                        if (part === '..') {
+                            parts.pop();
+                        } else if (part !== '.' && part !== '') {
+                            parts.push(part);
                         }
-                        finalPath = currentParts.join('/');
-                    } else if (href.indexOf('/') === -1) {
-                        // Just a filename - same directory as current file
-                        finalPath = currentDir + href;
-                    } else {
-                        // Has a slash but no ../ - absolute from root
-                        finalPath = href;
                     }
+
+                    let finalPath = parts.join('/');
 
                     window.location.hash = finalPath;
                     loadContent(finalPath);
