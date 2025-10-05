@@ -6,18 +6,19 @@
     <title>Animecs Documentation</title>
 
     <style>
-        /* ===== UNITY-INSPIRED THEME ===== */
+        /* ===== TRUE UNITY THEME ===== */
         :root {
-            /* Colors matching Unity docs */
             --unity-dark: #222c37;
-            --unity-sidebar: #f5f5f5;
+            --unity-sidebar: #f7f7f7;
             --unity-border: #d8d8d8;
             --unity-blue: #0066cc;
             --unity-blue-hover: #0052a3;
-            --unity-text: #2c2c2c;
-            --unity-text-light: #6b6b6b;
+            --unity-text: #222222;
+            --unity-text-light: #707070;
             --unity-code-bg: #f6f8fa;
             --unity-code-border: #e1e4e8;
+            --unity-note-bg: #e7f3ff;
+            --unity-note-border: #4a9eff;
         }
 
         * {
@@ -26,11 +27,12 @@
 
         body {
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-size: 15px;
-            line-height: 1.65;
+            font-size: 14px;
+            line-height: 1.7;
             color: var(--unity-text);
             margin: 0;
             padding: 0;
+            background: white;
         }
 
         /* ===== FIXED HEADER BAR ===== */
@@ -45,13 +47,13 @@
             display: flex;
             align-items: center;
             padding: 0 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .unity-header-logo {
             color: white;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 500;
             margin-right: 32px;
             text-decoration: none;
             display: flex;
@@ -64,7 +66,7 @@
         }
 
         .unity-header-breadcrumb {
-            color: rgba(255,255,255,0.6);
+            color: rgba(255,255,255,0.65);
             font-size: 14px;
         }
 
@@ -85,17 +87,16 @@
         }
 
         .unity-header-tabs a {
-            color: rgba(255,255,255,0.85);
+            color: rgba(255,255,255,0.8);
             text-decoration: none;
-            font-size: 14px;
-            padding: 14px 0;
+            font-size: 13px;
+            padding: 15px 0;
             border-bottom: 2px solid transparent;
             transition: all 0.2s;
         }
 
         .unity-header-tabs a:hover {
             color: white;
-            border-bottom-color: rgba(255,255,255,0.5);
         }
 
         .unity-header-tabs a.active {
@@ -106,7 +107,7 @@
         .unity-header-store {
             background: #00a8e6;
             color: white;
-            padding: 6px 16px;
+            padding: 7px 16px;
             border-radius: 3px;
             text-decoration: none;
             font-size: 13px;
@@ -130,7 +131,7 @@
         }
 
         .sidebar-nav {
-            padding: 24px 0 40px 0;
+            padding: 20px 0 40px 0;
         }
 
         .sidebar-nav > ul {
@@ -143,35 +144,35 @@
             list-style: none;
         }
 
-        /* Section headers */
+        /* Section headers - Unity style */
         .sidebar-nav > ul > li > p,
         .sidebar-nav > ul > li > strong {
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            color: #888;
-            padding: 16px 24px 8px 24px;
+            color: #999;
+            padding: 20px 20px 8px 20px;
             margin: 0;
         }
 
         .sidebar-nav a {
             display: block;
-            color: var(--unity-text);
+            color: #333;
             text-decoration: none;
-            padding: 6px 24px;
-            font-size: 14px;
+            padding: 5px 20px;
+            font-size: 13px;
             border-left: 3px solid transparent;
             transition: all 0.15s;
         }
 
         .sidebar-nav a:hover {
-            background: rgba(0,0,0,0.04);
+            background: rgba(0,0,0,0.03);
             color: var(--unity-blue);
         }
 
         .sidebar-nav a.active {
-            background: rgba(0,102,204,0.08);
+            background: rgba(0,102,204,0.06);
             border-left-color: var(--unity-blue);
             color: var(--unity-blue);
             font-weight: 500;
@@ -182,13 +183,13 @@
         }
 
         .sidebar-nav ul ul a {
-            padding-left: 44px;
+            padding-left: 40px;
             font-size: 13px;
         }
 
         .sidebar-nav ul ul ul a {
-            padding-left: 64px;
-            font-size: 13px;
+            padding-left: 60px;
+            font-size: 12px;
         }
 
         /* ===== MAIN CONTENT ===== */
@@ -203,172 +204,225 @@
         }
 
         .markdown-section {
-            max-width: 860px;
-            padding: 48px 64px 120px 64px;
+            max-width: 900px;
+            padding: 40px 60px 120px 60px;
         }
 
-        /* Typography */
+        /* ===== TYPOGRAPHY - THIS IS KEY ===== */
+
+        /* Main title - Unity uses THIN fonts */
         .markdown-section h1 {
-            font-size: 42px;
+            font-size: 36px;
             font-weight: 300;
             margin: 0 0 8px 0;
             padding: 0;
             border: none;
-            color: var(--unity-text);
+            color: #222;
+            letter-spacing: -0.5px;
         }
 
-        .markdown-section h1 + p {
-            font-size: 18px;
-            color: var(--unity-text-light);
-            margin: 0 0 32px 0;
+        /* Subtitle right after h1 */
+        .markdown-section h1 + blockquote {
+            font-size: 16px;
+            color: #555;
+            margin: 0 0 40px 0;
+            padding: 12px 20px;
+            border-left: 3px solid var(--unity-note-border);
+            background: var(--unity-note-bg);
+            font-weight: 400;
         }
 
+        /* Section headings - Unity keeps these GRAY, not blue */
         .markdown-section h2 {
-            font-size: 32px;
-            font-weight: 300;
-            margin: 56px 0 24px 0;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #e8e8e8;
-            color: var(--unity-text);
+            font-size: 26px;
+            font-weight: 400;
+            margin: 48px 0 20px 0;
+            padding: 0;
+            border: none;
+            color: #222;
+            letter-spacing: -0.3px;
         }
 
         .markdown-section h3 {
-            font-size: 24px;
-            font-weight: 400;
-            margin: 40px 0 16px 0;
-            color: var(--unity-text);
+            font-size: 20px;
+            font-weight: 500;
+            margin: 32px 0 16px 0;
+            color: #222;
         }
 
         .markdown-section h4 {
-            font-size: 18px;
-            font-weight: 500;
-            margin: 32px 0 12px 0;
-            color: var(--unity-text);
+            font-size: 16px;
+            font-weight: 600;
+            margin: 24px 0 12px 0;
+            color: #222;
         }
 
+        /* Body text */
         .markdown-section p {
-            margin: 16px 0;
-            line-height: 1.7;
+            margin: 14px 0;
+            line-height: 1.75;
+            color: #333;
+            font-size: 14px;
         }
 
+        /* Links - ONLY blue elements */
         .markdown-section a {
             color: var(--unity-blue);
             text-decoration: none;
             border-bottom: 1px solid transparent;
+            transition: border-color 0.2s;
         }
 
         .markdown-section a:hover {
             border-bottom-color: var(--unity-blue);
         }
 
+        /* Lists */
         .markdown-section ul,
         .markdown-section ol {
             margin: 16px 0;
-            padding-left: 24px;
+            padding-left: 28px;
         }
 
         .markdown-section li {
-            margin: 8px 0;
-            line-height: 1.65;
+            margin: 6px 0;
+            line-height: 1.7;
+            color: #333;
         }
 
-        /* Code blocks */
+        /* Strong text in lists */
+        .markdown-section li strong {
+            font-weight: 600;
+            color: #222;
+        }
+
+        /* ===== CODE BLOCKS ===== */
         .markdown-section pre {
             background: var(--unity-code-bg) !important;
             border: 1px solid var(--unity-code-border);
-            border-radius: 4px;
-            padding: 20px;
-            margin: 24px 0;
+            border-radius: 3px;
+            padding: 16px;
+            margin: 20px 0;
             overflow-x: auto;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.04);
         }
 
         .markdown-section code {
             background: #f0f0f0;
-            padding: 2px 6px;
+            padding: 2px 5px;
             border-radius: 3px;
-            font-size: 14px;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
-            color: #333;
+            font-size: 13px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'Courier New', monospace;
+            color: #c7254e;
+            border: 1px solid #ececec;
         }
 
         .markdown-section pre > code {
             background: transparent;
             padding: 0;
+            border: none;
             border-radius: 0;
             font-size: 13px;
             line-height: 1.6;
+            color: #333;
         }
 
-        /* Note boxes (blockquotes) */
+        /* ===== NOTE BOXES ===== */
         .markdown-section blockquote {
-            border-left: 4px solid #0066cc;
-            background: #f0f7ff;
-            padding: 16px 20px;
-            margin: 24px 0;
-            border-radius: 0 4px 4px 0;
+            border-left: 3px solid var(--unity-note-border);
+            background: var(--unity-note-bg);
+            padding: 12px 16px;
+            margin: 20px 0;
+            border-radius: 0 3px 3px 0;
         }
 
         .markdown-section blockquote p {
             margin: 0;
+            font-size: 14px;
+            line-height: 1.6;
         }
 
-        /* Tables */
+        /* ===== TABLES ===== */
         .markdown-section table {
             width: 100%;
             border-collapse: collapse;
             margin: 24px 0;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .markdown-section table th {
-            background: #f8f8f8;
-            border: 1px solid var(--unity-border);
-            padding: 12px 16px;
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            padding: 10px 14px;
             text-align: left;
             font-weight: 600;
+            color: #333;
         }
 
         .markdown-section table td {
-            border: 1px solid var(--unity-border);
-            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            padding: 10px 14px;
+            color: #333;
         }
 
         .markdown-section table tr:nth-child(even) {
             background: #fafafa;
         }
 
-        /* Search */
+        /* ===== SEARCH ===== */
         .search {
             margin: 0 !important;
-            padding: 24px !important;
+            padding: 20px !important;
             border-bottom: 1px solid var(--unity-border) !important;
+            background: var(--unity-sidebar) !important;
         }
 
         .search input {
             width: 100% !important;
             padding: 8px 12px !important;
-            border: 1px solid var(--unity-border) !important;
-            border-radius: 4px !important;
-            font-size: 14px !important;
+            border: 1px solid #d0d0d0 !important;
+            border-radius: 3px !important;
+            font-size: 13px !important;
             background: white !important;
+            color: #333 !important;
         }
 
         .search input:focus {
             outline: none !important;
             border-color: var(--unity-blue) !important;
+            box-shadow: 0 0 0 2px rgba(0,102,204,0.1) !important;
         }
 
-        /* Copy code button */
+        .search input::placeholder {
+            color: #999 !important;
+        }
+
+        /* ===== COPY CODE BUTTON ===== */
         .docsify-copy-code-button {
             background: var(--unity-blue) !important;
             color: white !important;
             font-size: 11px !important;
+            padding: 4px 10px !important;
+            border-radius: 3px !important;
         }
 
-        /* Responsive */
+        .docsify-copy-code-button:hover {
+            background: var(--unity-blue-hover) !important;
+        }
+
+        /* ===== HIDE DEFAULT NAVBAR ===== */
+        nav.app-nav {
+            display: none !important;
+        }
+
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .unity-header-tabs {
                 display: none;
+            }
+
+            .unity-header-breadcrumb {
+                font-size: 12px;
             }
 
             .sidebar {
@@ -380,8 +434,21 @@
             }
 
             .markdown-section {
-                padding: 24px;
+                padding: 20px;
             }
+
+            .markdown-section h1 {
+                font-size: 28px;
+            }
+
+            .markdown-section h2 {
+                font-size: 22px;
+            }
+        }
+
+        /* ===== SMOOTH SCROLLING ===== */
+        html {
+            scroll-behavior: smooth;
         }
     </style>
 </head>
