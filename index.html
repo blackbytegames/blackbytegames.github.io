@@ -21,22 +21,34 @@
 
     /* Header */
     .header {
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(10px);
-      padding: 20px 40px;
-      color: white;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        padding: 20px 40px;
+        color: white;
     }
 
-    .header h1 {
-      font-size: 28px;
-      font-weight: 600;
-      letter-spacing: -0.5px;
+    .header-content {
+        display: flex;
+        align-items: center;
+        gap: 16px;
     }
 
-    .header p {
-      font-size: 14px;
-      opacity: 0.8;
-      margin-top: 5px;
+    .header-logo-img {
+        height: 48px;
+        width: auto;
+    }
+
+    .header-text h1 {
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: -0.5px;
+        margin: 0;
+    }
+
+    .header-text p {
+        font-size: 14px;
+        opacity: 0.8;
+        margin: 4px 0 0 0;
     }
 
     /* Main Container */
@@ -203,10 +215,15 @@
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>Blackbyte Games</h1>
-    <p>High-performance tools for Unity developers</p>
-  </div>
+<div class="header">
+    <div class="header-content">
+        <img src="assets/logo.png" alt="Blackbyte Games" class="header-logo-img">
+        <div class="header-text">
+            <h1>Blackbyte Games</h1>
+            <p>High-performance tools for Unity developers</p>
+        </div>
+    </div>
+</div>
 
   <div class="container">
     <div class="intro">
