@@ -1,5 +1,0 @@
-* [Manual](manual/)
-* [Scripting API](api/)
-* [Changelog](changelog.md)
-* [License](license.md)
-* [Asset Store](https://assetstore.unity.com/packages/your-package)
