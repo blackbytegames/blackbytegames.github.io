@@ -661,7 +661,6 @@
                 return;
             }
 
-            // Strip leading # if present
             if (href.startsWith('#')) {
                 href = href.substring(1);
             }
@@ -671,12 +670,12 @@
                     e.preventDefault();
 
                     let finalPath;
+                    let currentPath = window.location.hash.substring(1) || 'manual/about.md';
+                    let currentDir = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
 
                     if (href.startsWith('../') || href.startsWith('./')) {
-                        let currentPath = window.location.hash.substring(1) || 'manual/about.md';
-                        let currentParts = currentPath.split('/');
-                        currentParts.pop();
-
+                        // Relative path with ../ or ./
+                        let currentParts = currentDir.split('/').filter(p => p);
                         let hrefParts = href.split('/');
 
                         for (let part of hrefParts) {
@@ -686,9 +685,12 @@
                                 currentParts.push(part);
                             }
                         }
-
                         finalPath = currentParts.join('/');
+                    } else if (href.indexOf('/') === -1) {
+                        // Just a filename - same directory as current file
+                        finalPath = currentDir + href;
                     } else {
+                        // Has a slash but no ../ - absolute from root
                         finalPath = href;
                     }
 
