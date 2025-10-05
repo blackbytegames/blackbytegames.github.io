@@ -343,9 +343,3 @@ if (entityManager.HasComponent<BossTag>(entity))
 ```
 
 ---
-
-**See Also:**
-
-- [Components →](components.md) - Component reference
-- [Data Structures →](data-structures.md) - Blob asset layout
-- [Systems →](systems.md) - System execution order

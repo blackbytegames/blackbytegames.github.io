@@ -68,5 +68,3 @@ Systems execute in this sequence each frame:
 8. **AnimecsBlendShapeSystem** - Weight application
 
 ---
-
-See [Architecture](../manual/architecture.md) for detailed system flow.

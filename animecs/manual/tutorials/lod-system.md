@@ -304,5 +304,3 @@ Or use `AnimecsDebuggerAuthoring` component (shows LOD level in overlay).
 **Events missed** - Critical events on Low LOD entities. Force High LOD for entities with important events.
 
 ---
-
-**Next:** [Blend Shapes →](blend-shapes.md) - Facial animation and morph targets

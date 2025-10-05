@@ -173,5 +173,3 @@ The sample is fully documented and Burst-compiled. Copy any system or pattern yo
 **Debugging animations?** Check Booth 8's debug visualization setup
 
 ---
-
-**Next:** [Limitations →](../limitations.md) - What Animecs doesn't support

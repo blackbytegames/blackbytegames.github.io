@@ -102,5 +102,3 @@ Buffer element for fired animation events. Contains event name, state index, fra
 Debug visualization settings including display mode, color override, and gizmo scale. Enableable component.
 
 ---
-
-See [Data Structures](data-structures.md) for blob asset details.

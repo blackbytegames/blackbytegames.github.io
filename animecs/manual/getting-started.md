@@ -149,16 +149,6 @@ When you bake a character, Animecs creates:
 
 All of this happens automatically. You just click "Bake."
 
-## Next Steps
-
-Now that you have a working animated character:
-
-- [Control animations at runtime](../api/controller.md) - Play states, set parameters
-- [Understand the architecture](architecture.md) - How Animecs works internally
-- [Configure LOD](tutorials/lod-system.md) - Adjust distance thresholds and update frequencies
-- [Use blend trees](tutorials/blend-trees.md) - Set up locomotion blending
-- [Handle events](tutorials/state-machines.md#animation-events) - Respond to animation events
-
 ## Common Issues
 
 ### "No Animator or AnimatorController found" 

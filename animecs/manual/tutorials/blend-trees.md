@@ -288,5 +288,3 @@ AnimecsController.SetFloat(entityManager, entity, aimUpHash, aimAmount);
 **Blend tree doesn't update** - Verify you're setting the correct parameter hashes.
 
 ---
-
-**Next:** [LOD System →](lod-system.md) - Performance optimization through distance-based updates

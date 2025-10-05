@@ -319,5 +319,3 @@ If mesh doesn't deform, check:
 - Set up blend trees for locomotion
 - Optimize with LOD
 - Animate blend shapes
-
-Check the [API Reference](../../api/) for detailed component and system documentation.

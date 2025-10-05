@@ -131,9 +131,3 @@ partial struct AnimationControlJob : IJobEntity
 **Event Processing:** Clear event buffers after processing to prevent duplicate handling.
 
 ---
-
-**Next Steps:**
-
-- [AnimecsController →](controller.md) - Full API reference
-- [Components →](components.md) - Component details
-- [Data Structures →](data-structures.md) - Blob asset layout

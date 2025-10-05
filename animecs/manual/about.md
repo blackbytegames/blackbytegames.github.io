@@ -97,7 +97,7 @@ There are other DOTS animation solutions on the Asset Store. Here's what makes A
 
 ## Who Built This
 
-Animecs is developed by [Blackbyte Games](https://blackbytegames.com), created to solve animation challenges we faced in our own DOTS projects.
+Animecs is developed by [Blackbyte Games](https://blackbyte-games.gitbook.io/blackbytegames), created to solve animation challenges we faced in our own DOTS projects.
 
 We needed a way to use Mecanim workflows without sacrificing DOTS performance. Building Animecs was faster than writing custom state machines for every project.
 
@@ -114,13 +114,6 @@ We needed a way to use Mecanim workflows without sacrificing DOTS performance. B
 Animecs follows the [Unity Asset Store EULA](https://unity.com/legal/as-terms).
 
 ---
-
-**Next Steps:**
-
-- [Getting Started →](manual/getting-started.md) - Install Animecs and bake your first character
-- [Architecture →](manual/architecture.md) - Deep dive into how the system works
-- [Tutorials →](tutorials/basic-setup.md) - Step-by-step guides for common tasks
-- [Limitations →](manual/limitations.md) - What Animecs doesn't support
 
 ## Support
 - Email: [sridogames@gmail.com](mailto:sridogames@gmail.com) - Direct support

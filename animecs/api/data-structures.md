@@ -282,9 +282,3 @@ Hash calculated from:
 - Animation clip set
 
 ---
-
-**See Also:**
-
-- [Components →](components.md) - Component definitions
-- [AnimecsController →](controller.md) - Runtime API
-- [Bakers →](baker.md) - Authoring components

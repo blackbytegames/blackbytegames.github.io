@@ -230,9 +230,3 @@ Multiple characters share assets if using same rig.
 **Trim clips:** Remove unused animations from Animator Controller
 
 ---
-
-**See Also:**
-
-- [Getting Started →](../manual/getting-started.md) - Baking workflow
-- [Architecture →](../manual/architecture.md) - Baking phase details
-- [Components →](components.md) - Created components

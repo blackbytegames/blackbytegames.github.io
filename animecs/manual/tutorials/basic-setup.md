@@ -237,5 +237,3 @@ AnimecsController.Play(ECB, index, entity, IdleStateIndex, 0.2f);
 **Instant transitions when you want blending** - Check your `transitionDuration` value. Zero means instant.
 
 ---
-
-**Next:** [State Machines →](state-machines.md) - Deep dive into transition logic and events

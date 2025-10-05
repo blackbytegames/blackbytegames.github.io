@@ -294,5 +294,3 @@ Debug.Log($"Current: {currentState}, Transitioning: {AnimecsController.IsTransit
 **Trigger doesn't work** - Triggers are consumed after transition. Set again if needed.
 
 ---
-
-**Next:** [Blend Trees →](blend-trees.md) - Locomotion and smooth animation blending
