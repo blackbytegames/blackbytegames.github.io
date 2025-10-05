@@ -1,0 +1,51 @@
+<svg width="800" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#333" />
+    </marker>
+  </defs>
+  
+  <!-- Authoring Phase -->
+  <rect x="50" y="50" width="300" height="140" fill="#e7f3ff" stroke="#0066cc" stroke-width="2" rx="5"/>
+  <text x="200" y="75" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold" fill="#222">AUTHORING (Editor)</text>
+  
+  <rect x="70" y="90" width="260" height="30" fill="#fff" stroke="#999" rx="3"/>
+  <text x="200" y="110" text-anchor="middle" font-family="Arial" font-size="13" fill="#333">Animator Controller</text>
+  
+  <line x1="200" y1="120" x2="200" y2="135" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <rect x="70" y="135" width="260" height="45" fill="#fff" stroke="#999" rx="3"/>
+  <text x="200" y="153" text-anchor="middle" font-family="Arial" font-size="12" fill="#333">Extract States, Transitions, Parameters</text>
+  <text x="200" y="168" text-anchor="middle" font-family="Arial" font-size="12" fill="#333">Sample Animations Frame-by-Frame</text>
+  
+  <!-- Arrow down -->
+  <line x1="200" y1="190" x2="200" y2="230" stroke="#333" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="240" y="215" font-family="Arial" font-size="12" fill="#666">Bake</text>
+  
+  <!-- Runtime Phase -->
+  <rect x="50" y="230" width="300" height="140" fill="#fff4e5" stroke="#ff9800" stroke-width="2" rx="5"/>
+  <text x="200" y="255" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold" fill="#222">RUNTIME (ECS Jobs)</text>
+  
+  <rect x="70" y="270" width="80" height="30" fill="#fff" stroke="#999" rx="3"/>
+  <text x="110" y="290" text-anchor="middle" font-family="Arial" font-size="11" fill="#333">State Blob</text>
+  
+  <rect x="160" y="270" width="80" height="30" fill="#fff" stroke="#999" rx="3"/>
+  <text x="200" y="290" text-anchor="middle" font-family="Arial" font-size="11" fill="#333">Bone Blob</text>
+  
+  <rect x="250" y="270" width="80" height="30" fill="#fff" stroke="#999" rx="3"/>
+  <text x="290" y="290" text-anchor="middle" font-family="Arial" font-size="11" fill="#333">Shape Blob</text>
+  
+  <line x1="200" y1="300" x2="200" y2="320" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <rect x="70" y="320" width="260" height="40" fill="#fff" stroke="#999" rx="3"/>
+  <text x="200" y="337" text-anchor="middle" font-family="Arial" font-size="12" fill="#333">Systems Read Blobs</text>
+  <text x="200" y="352" text-anchor="middle" font-family="Arial" font-size="12" fill="#333">→ Update Entity Components</text>
+  
+  <!-- Arrow to GPU -->
+  <line x1="350" y1="340" x2="430" y2="340" stroke="#333" stroke-width="3" marker-end="url(#arrowhead)"/>
+  
+  <!-- GPU Compute -->
+  <rect x="430" y="310" width="320" height="60" fill="#f0f0f0" stroke="#666" stroke-width="2" rx="5"/>
+  <text x="590" y="333" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#222">Unity Entities Graphics</text>
+  <text x="590" y="353" text-anchor="middle" font-family="Arial" font-size="12" fill="#555">Compute Shader Deformation → GPU</text>
+</svg>

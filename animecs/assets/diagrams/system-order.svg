@@ -1,0 +1,64 @@
+<svg width="600" height="550" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#333" />
+    </marker>
+  </defs>
+  
+  <!-- Title -->
+  <text x="300" y="30" text-anchor="middle" font-family="Arial" font-size="18" font-weight="bold" fill="#222">AnimecsSystemGroup Execution Order</text>
+  
+  <!-- System 1 -->
+  <rect x="50" y="60" width="500" height="50" fill="#e7f3ff" stroke="#0066cc" stroke-width="2" rx="5"/>
+  <text x="70" y="83" font-family="Arial" font-size="13" font-weight="bold" fill="#222">1. AnimecsLODSystem</text>
+  <text x="70" y="100" font-family="Arial" font-size="11" fill="#555">Calculate distance, set LOD level, update frequency</text>
+  
+  <line x1="300" y1="110" x2="300" y2="125" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- System 2 -->
+  <rect x="50" y="125" width="500" height="50" fill="#f0f0f0" stroke="#666" stroke-width="2" rx="5"/>
+  <text x="70" y="148" font-family="Arial" font-size="13" font-weight="bold" fill="#222">2. AnimecsSkinInitializationSystem</text>
+  <text x="70" y="165" font-family="Arial" font-size="11" fill="#555">Link renderers to state machines (runs once)</text>
+  
+  <line x1="300" y1="175" x2="300" y2="190" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- System 3 -->
+  <rect x="50" y="190" width="500" height="50" fill="#fff4e5" stroke="#ff9800" stroke-width="2" rx="5"/>
+  <text x="70" y="213" font-family="Arial" font-size="13" font-weight="bold" fill="#222">3. AnimecsStateProgressionSystem</text>
+  <text x="70" y="230" font-family="Arial" font-size="11" fill="#555">Advance animation time based on deltaTime</text>
+  
+  <line x1="300" y1="240" x2="300" y2="255" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- System 4 -->
+  <rect x="50" y="255" width="500" height="50" fill="#fff4e5" stroke="#ff9800" stroke-width="2" rx="5"/>
+  <text x="70" y="278" font-family="Arial" font-size="13" font-weight="bold" fill="#222">4. AnimecsStateTransitionSystem</text>
+  <text x="70" y="295" font-family="Arial" font-size="11" fill="#555">Evaluate conditions, trigger state changes</text>
+  
+  <line x1="300" y1="305" x2="300" y2="320" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- System 5 -->
+  <rect x="50" y="320" width="500" height="50" fill="#fff4e5" stroke="#ff9800" stroke-width="2" rx="5"/>
+  <text x="70" y="343" font-family="Arial" font-size="13" font-weight="bold" fill="#222">5. AnimecsBlendTreeSystem</text>
+  <text x="70" y="360" font-family="Arial" font-size="11" fill="#555">Calculate motion weights for blend trees</text>
+  
+  <line x1="300" y1="370" x2="300" y2="385" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- System 6 -->
+  <rect x="50" y="385" width="500" height="50" fill="#f0f0f0" stroke="#666" stroke-width="2" rx="5"/>
+  <text x="70" y="408" font-family="Arial" font-size="13" font-weight="bold" fill="#222">6. AnimecsEventSystem</text>
+  <text x="70" y="425" font-family="Arial" font-size="11" fill="#555">Detect animation events, populate buffer</text>
+  
+  <line x1="300" y1="435" x2="300" y2="450" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- System 7 -->
+  <rect x="50" y="450" width="500" height="50" fill="#e8f5e9" stroke="#4caf50" stroke-width="2" rx="5"/>
+  <text x="70" y="473" font-family="Arial" font-size="13" font-weight="bold" fill="#222">7. AnimecsSkinDeformationSystem</text>
+  <text x="70" y="490" font-family="Arial" font-size="11" fill="#555">Sample bone matrices, write to SkinMatrix buffer → GPU</text>
+  
+  <line x1="300" y1="500" x2="300" y2="515" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- System 8 -->
+  <rect x="50" y="515" width="500" height="50" fill="#e8f5e9" stroke="#4caf50" stroke-width="2" rx="5"/>
+  <text x="70" y="538" font-family="Arial" font-size="13" font-weight="bold" fill="#222">8. AnimecsBlendShapeSystem</text>
+  <text x="70" y="555" font-family="Arial" font-size="11" fill="#555">Sample blend shape weights, write to buffer → GPU</text>
+</svg>

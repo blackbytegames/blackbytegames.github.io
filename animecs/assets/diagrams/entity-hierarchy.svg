@@ -1,0 +1,56 @@
+<svg width="700" height="450" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#666" />
+    </marker>
+  </defs>
+  
+  <!-- Root Entity -->
+  <rect x="50" y="50" width="280" height="180" fill="#e7f3ff" stroke="#0066cc" stroke-width="2" rx="5"/>
+  <text x="190" y="75" text-anchor="middle" font-family="Arial" font-size="15" font-weight="bold" fill="#222">Root Entity (State Machine)</text>
+  
+  <text x="70" y="100" font-family="Arial" font-size="12" fill="#333">• AnimecsTag</text>
+  <text x="70" y="120" font-family="Arial" font-size="12" fill="#333">• AnimecsStateData</text>
+  <text x="70" y="140" font-family="Arial" font-size="12" fill="#333">• AnimecsStateMachineBlob</text>
+  <text x="70" y="160" font-family="Arial" font-size="12" fill="#333">• AnimecsParameters</text>
+  <text x="70" y="180" font-family="Arial" font-size="12" fill="#333">• AnimecsLOD</text>
+  <text x="70" y="200" font-family="Arial" font-size="12" fill="#333">• Parameter Buffers (Float, Int, Bool, Trigger)</text>
+  
+  <!-- Connection Lines -->
+  <line x1="190" y1="230" x2="190" y2="270" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="190" y1="270" x2="120" y2="290" stroke="#666" stroke-width="2"/>
+  <line x1="190" y1="270" x2="260" y2="290" stroke="#666" stroke-width="2"/>
+  <line x1="190" y1="270" x2="400" y2="290" stroke="#666" stroke-width="2"/>
+  
+  <text x="195" y="255" font-family="Arial" font-size="11" fill="#666">Children</text>
+  
+  <!-- Child Entity 1 -->
+  <rect x="30" y="290" width="180" height="140" fill="#fff4e5" stroke="#ff9800" stroke-width="2" rx="5"/>
+  <text x="120" y="310" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#222">Renderer Entity 1</text>
+  
+  <text x="45" y="330" font-family="Arial" font-size="11" fill="#333">• AnimecsSkinMatrixTag</text>
+  <text x="45" y="350" font-family="Arial" font-size="11" fill="#333">• AnimecsBoneMatrix</text>
+  <text x="45" y="370" font-family="Arial" font-size="11" fill="#333">• AnimecsStateMachineParent</text>
+  <text x="45" y="390" font-family="Arial" font-size="11" fill="#333">• SkinMatrix (buffer)</text>
+  <text x="45" y="410" font-family="Arial" font-size="11" fill="#333">• BlendShapeWeight (buffer)</text>
+  
+  <!-- Child Entity 2 -->
+  <rect x="230" y="290" width="180" height="140" fill="#fff4e5" stroke="#ff9800" stroke-width="2" rx="5"/>
+  <text x="320" y="310" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#222">Renderer Entity 2</text>
+  
+  <text x="245" y="330" font-family="Arial" font-size="11" fill="#333">• AnimecsSkinMatrixTag</text>
+  <text x="245" y="350" font-family="Arial" font-size="11" fill="#333">• AnimecsBoneMatrix</text>
+  <text x="245" y="370" font-family="Arial" font-size="11" fill="#333">• AnimecsStateMachineParent</text>
+  <text x="245" y="390" font-family="Arial" font-size="11" fill="#333">• SkinMatrix (buffer)</text>
+  <text x="245" y="410" font-family="Arial" font-size="11" fill="#333">• BlendShapeWeight (buffer)</text>
+  
+  <!-- Child Entity N (dots) -->
+  <text x="440" y="360" font-family="Arial" font-size="24" fill="#999">...</text>
+  
+  <!-- Reference arrow -->
+  <line x1="120" y1="435" x2="120" y2="465" stroke="#0066cc" stroke-width="2" stroke-dasharray="5,5"/>
+  <line x1="120" y1="465" x2="60" y2="465" stroke="#0066cc" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrow)"/>
+  <line x1="60" y1="465" x2="60" y2="240" stroke="#0066cc" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrow)"/>
+  
+  <text x="25" y="360" font-family="Arial" font-size="10" fill="#0066cc" transform="rotate(-90 25 360)">AnimecsStateMachineParent</text>
+</svg>
