@@ -37,61 +37,25 @@ Your workflow stays the same. Animator Controller, animation clips, blend trees�
 
 ## Design Goals
 
-### 1. Baking Over Runtime
+**Baking Over Runtime** - We pre-compute as much as possible. Bone matrices are sampled and baked during authoring. State machines are converted to optimized blob assets. This means zero reflection, zero string lookups, and zero GameObject traversal at runtime. Your game runs fast because the heavy work happened in the editor.
 
-We pre-compute as much as possible. Bone matrices are sampled and baked during authoring. State machines are converted to optimized blob assets. This means zero reflection, zero string lookups, and zero GameObject traversal at runtime.
+**Familiar Workflow** - If you know Mecanim, you know Animecs. Same states, same transitions, same blend trees. We don't reinvent animation authoring—we just make it work at scale in DOTS. You don't rewrite your animation logic. Right-click, bake, done.
 
-**Why it matters:** Your game runs fast because the heavy work happened in the editor.
+**Performance by Default** - LOD isn't optional. Compute shader skinning isn't a toggle. Burst compilation isn't experimental. These are enabled by default because DOTS is for performance, and Animecs respects that. You get optimized animation without fighting configuration settings.
 
-### 2. Familiar Workflow
-
-If you know Mecanim, you know Animecs. Same states, same transitions, same blend trees. We don't reinvent animation authoring—we just make it work at scale in DOTS.
-
-**Why it matters:** You don't rewrite your animation logic. Right-click, bake, done.
-
-### 3. Performance by Default
-
-LOD isn't optional. Compute shader skinning isn't a toggle. Burst compilation isn't experimental. These are enabled by default because DOTS is for performance, and Animecs respects that.
-
-**Why it matters:** You get optimized animation without fighting configuration settings.
-
-### 4. Explicit Behavior
-
-When you request a 0.3 second transition, you get 0.3 seconds. When you set LOD thresholds, those exact thresholds are used. No hidden heuristics, no "smart" behavior that breaks your expectations.
-
-**Why it matters:** Debugging is easier when systems do exactly what they say.
+**Explicit Behavior** - When you request a 0.3 second transition, you get 0.3 seconds. When you set LOD thresholds, those exact thresholds are used. No hidden heuristics, no "smart" behavior that breaks your expectations. Debugging is easier when systems do exactly what they say.
 
 ## What Makes It Fast
 
-### Shared Bone Structures
+**Shared Bone Structures** - Multiple characters with identical skeletons share the same baked bone matrix data. One character or one hundred—if they use the same rig, they reference the same blob asset. Less memory, better cache usage, faster baking.
 
-Multiple characters with identical skeletons share the same baked bone matrix data. One character or one hundred—if they use the same rig, they reference the same blob asset.
+**Compute Shader Skinning** - Vertices are transformed on the GPU via compute shaders. The CPU just updates bone transforms and dispatches compute jobs. No per-vertex CPU work, no mesh copies per instance. Thousands of characters without CPU bottlenecks.
 
-**Impact:** Less memory, better cache usage, faster baking.
+**LOD With Temporal Distribution** - Distant characters update at 1/8th frequency. Updates are distributed across frames using deterministic offsets. No frame spikes when 200 characters need simultaneous updates. Consistent frame times even with massive crowds.
 
-### Compute Shader Skinning
+**Blob Assets for Everything** - State machines, transitions, clips, blend trees—all stored in blob assets. Fast access, safe for jobs, zero garbage collection. No allocations, no cache misses, pure data-oriented performance.
 
-Vertices are transformed on the GPU via compute shaders. The CPU just updates bone transforms and dispatches compute jobs. No per-vertex CPU work, no mesh copies per instance.
-
-**Impact:** Thousands of characters without CPU bottlenecks.
-
-### LOD With Temporal Distribution
-
-Distant characters update at 1/8th frequency. Updates are distributed across frames using deterministic offsets. No frame spikes when 200 characters need simultaneous updates.
-
-**Impact:** Consistent frame times even with massive crowds.
-
-### Blob Assets for Everything
-
-State machines, transitions, clips, blend trees—all stored in blob assets. Fast access, safe for jobs, zero garbage collection.
-
-**Impact:** No allocations, no cache misses, pure data-oriented performance.
-
-### Burst-Compiled Jobs
-
-Every system runs through Burst. State evaluation, blend tree calculation, transition checks, LOD updates—all compiled to SIMD-optimized native code.
-
-**Impact:** 10-20x faster than managed C# for animation logic.
+**Burst-Compiled Jobs** - Every system runs through Burst. State evaluation, blend tree calculation, transition checks, LOD updates—all compiled to SIMD-optimized native code. Performance gains of 10-20x over managed C# for animation logic.
 
 ## Animecs vs Unity Animator
 
@@ -113,7 +77,7 @@ Animator is powerful and flexible. Animecs is fast and specific. Here's where th
 - **Memory efficiency** - Shared bone data across instances
 - **Explicit control** - No hidden state machine complexity
 
-**Use Animator when:** You need maximum flexibility, complex IK, or humanoid retargeting.
+**Use Animator when:** You need maximum flexibility, complex IK, or having more layers.
 
 **Use Animecs when:** You need performance, DOTS integration, and crowds.
 
@@ -121,56 +85,47 @@ Animator is powerful and flexible. Animecs is fast and specific. Here's where th
 
 There are other DOTS animation solutions on the Asset Store. Here's what makes Animecs different:
 
-### Mecanim Compatibility
+**Mecanim Compatibility** - Animecs converts Animator Controllers directly. You don't rebuild your animation logic—you bake it. Other tools often require custom state machine authoring or code-based animation setup.
 
-Animecs converts Animator Controllers directly. You don't rebuild your animation logic—you bake it. Other tools often require custom state machine authoring or code-based animation setup.
+**Compute Shader Skinning** - Animecs uses Unity's compute deformation system. Some tools use CPU skinning (slow) or custom GPU approaches (compatibility issues). Animecs integrates with Entities Graphics for proven, supported GPU skinning.
 
-### Compute Shader Skinning
+**Automatic LOD** - LOD is built-in and enabled by default. Distance thresholds, update frequencies, and temporal distribution all work out of the box. Other solutions often leave LOD implementation to you.
 
-Animecs uses Unity's compute deformation system. Some tools use CPU skinning (slow) or custom GPU approaches (compatibility issues). Animecs integrates with Entities Graphics for proven, supported GPU skinning.
+**Blend Tree Support** - Full support for Unity's blend tree types: 1D, 2D Simple Directional, 2D Freeform Directional, 2D Freeform Cartesian, and Direct. Some tools only support basic blending or require manual setup.
 
-### Automatic LOD
+**Baking Workflow** - Animecs pre-bakes bone matrices during authoring. This means zero runtime overhead for sampling animations. Other tools may sample clips at runtime, which adds CPU cost.
 
-LOD is built-in and enabled by default. Distance thresholds, update frequencies, and temporal distribution all work out of the box. Other solutions often leave LOD implementation to you.
+## Who Built This
 
-### Blend Tree Support
+Animecs is developed by [Blackbyte Games](https://blackbytegames.com), created to solve animation challenges we faced in our own DOTS projects.
 
-Full support for Unity's blend tree types: 1D, 2D Simple Directional, 2D Freeform Directional, 2D Freeform Cartesian, and Direct. Some tools only support basic blending or require manual setup.
+We needed a way to use Mecanim workflows without sacrificing DOTS performance. Building Animecs was faster than writing custom state machines for every project.
 
-### Baking Workflow
+## What You Need
 
-Animecs pre-bakes bone matrices during authoring. This means zero runtime overhead for sampling animations. Other tools may sample clips at runtime, which adds CPU cost.
+- **Unity 2022.3 or newer**
+- **Entities 1.0.16+** (or compatible version)
+- **Entities Graphics 1.0.16+** (for compute deformation)
+- **Basic DOTS knowledge** (subscenes, baking, entities)
+- **Existing character with Animator Controller**
 
-## Known Limitations
+## License
 
-Animecs is built for specific use cases. Here's what it doesn't do:
+Animecs follows the [Unity Asset Store EULA](../license.md).
 
-### No Nested Blend Trees
+---
 
-Blend trees must be one level deep. A blend tree cannot contain another blend tree as a child. Keep your blending simple or split into multiple states.
+**Next Steps:**
 
-### No IK Support
+- [Getting Started →](getting-started.md) - Install Animecs and bake your first character
+- [Architecture →](architecture.md) - Deep dive into how the system works
+- [Tutorials →](tutorials/basic-setup.md) - Step-by-step guides for common tasks
+- [Limitations →](limitations.md) - What Animecs doesn't support
 
-Inverse kinematics must be handled separately. Use a dedicated IK solution if needed. Animecs handles forward kinematics only.
+## Support
+- Email: [sridogames@gmail.com](mailto:sridogames@gmail.com) - Direct support
+- [Discord](https://discord.gg/f6rzh5f5) - Community for questions, bug reports, and support
 
-### No Root Motion (Yet)
+---
 
-Root motion extraction is planned for a future update but not available in version 1.0. Use manual movement for now.
-
-### No Humanoid Retargeting
-
-Each skeleton needs its own animation clips. Generic rigs only. Humanoid avatar retargeting is not supported.
-
-### No Runtime State Machine Editing
-
-State machines are baked into blob assets. You can't add states or transitions at runtime. All animation logic must be defined during authoring.
-
-### Compute Shader Required
-
-GPU skinning requires compute shader support. Very old GPUs or platforms without compute capabilities won't work. (Basically anything from the last decade is fine.)
-
-[Full limitations list →](limitations.md)
-
-## Architecture Overview
-
-Here's how Animecs works internally:
+*Built by a solo dev who needed DOTS animation without the boilerplate. If it helps you too, that's a win.*
