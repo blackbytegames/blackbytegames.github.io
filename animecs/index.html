@@ -39,20 +39,19 @@
         .unity-logo {
             display: flex;
             align-items: center;
-            gap: 12px;
             margin-right: 32px;
             text-decoration: none;
+            cursor: pointer;
         }
 
         .unity-logo img {
             height: 32px;
             width: auto;
+            transition: opacity 0.2s;
         }
 
-        .unity-logo span {
-            color: white;
-            font-size: 15px;
-            font-weight: 500;
+        .unity-logo:hover img {
+            opacity: 0.85;
         }
 
         .unity-nav {
@@ -67,6 +66,7 @@
             padding: 15px 0;
             border-bottom: 2px solid transparent;
             transition: all 0.2s;
+            cursor: pointer;
         }
 
         .unity-nav a:hover,
@@ -222,6 +222,31 @@
             letter-spacing: 0.8px;
             color: #999;
             padding: 20px 20px 8px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .nav-section-toggle {
+            font-size: 10px;
+            transition: transform 0.2s;
+        }
+
+        .nav-section-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .sidebar-nav ul ul {
+            padding-left: 0;
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .sidebar-nav ul ul.collapsed {
+            max-height: 0;
         }
 
         .sidebar-nav ul ul a {
@@ -229,7 +254,46 @@
             font-size: 13px;
         }
 
+        .sidebar-nav ul ul ul a {
+            padding-left: 60px;
+            font-size: 12px;
+        }
+
+        /* Parent item with children */
+        .nav-parent {
+            position: relative;
+        }
+
+        .nav-parent > a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-right: 12px;
+        }
+
+        .nav-parent-toggle {
+            font-size: 10px;
+            color: #999;
+            transition: transform 0.2s;
+            cursor: pointer;
+            padding: 6px;
+        }
+
+        .nav-parent-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+
         /* ===== MAIN CONTENT ===== */
+        body {
+            padding-top: 50px;
+        }
+
+        .content {
+            left: 280px !important;
+            top: 50px !important;
+            padding-top: 0 !important;
+        }
+
         .unity-content {
             background: white;
             overflow-y: auto;
@@ -410,6 +474,12 @@
         }
 
         /* ===== RESPONSIVE ===== */
+        @media (max-width: 1400px) {
+            .unity-layout {
+                grid-template-columns: 260px 1fr 220px;
+            }
+        }
+
         @media (max-width: 1200px) {
             .unity-layout {
                 grid-template-columns: 260px 1fr;
@@ -460,13 +530,12 @@
 <div class="unity-header">
     <a href="/" class="unity-logo">
         <img src="../assets/logo.png" alt="Blackbyte">
-        <span>Blackbyte Docs</span>
     </a>
 
     <nav class="unity-nav">
-        <a href="#/" class="active">Manual</a>
-        <a href="#/api/">Scripting API</a>
-        <a href="#/changelog">Changelog</a>
+        <a href="#" data-section="manual" class="nav-tab active">Manual</a>
+        <a href="#" data-section="api" class="nav-tab">Scripting API</a>
+        <a href="#/changelog" class="nav-tab">Changelog</a>
     </nav>
 
     <div class="unity-search">
@@ -476,7 +545,7 @@
 
 <!-- Breadcrumb -->
 <div class="unity-breadcrumb">
-    <a href="#/manual/">Manual</a>
+    <a href="#" id="breadcrumbSection">Manual</a>
     <span>/</span>
     <span id="breadcrumbCurrent">Animecs</span>
 </div>
@@ -512,68 +581,58 @@
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 <script>
-    // Navigation structure
-    const navigation = [
-        { title: 'Home', url: 'README.md' },
-        {
-            section: 'Manual',
-            items: [
-                { title: 'About Animecs', url: 'manual/about.md' },
-                { title: 'Getting Started', url: 'manual/getting-started.md' },
-                { title: 'Architecture', url: 'manual/architecture.md' },
-                {
-                    title: 'Tutorials',
-                    submenu: [
-                        { title: 'Basic Setup', url: 'manual/tutorials/basic-setup.md' },
-                        { title: 'State Machines', url: 'manual/tutorials/state-machines.md' },
-                        { title: 'Blend Trees', url: 'manual/tutorials/blend-trees.md' },
-                        { title: 'LOD System', url: 'manual/tutorials/lod-system.md' },
-                        { title: 'Blend Shapes', url: 'manual/tutorials/blend-shapes.md' }
-                    ]
-                },
-                { title: 'Samples', url: 'manual/samples/README.md' },
-                { title: 'Limitations', url: 'manual/limitations.md' }
-            ]
-        },
-        {
-            section: 'Scripting API',
-            items: [
-                { title: 'API Overview', url: 'api/README.md' },
-                { title: 'AnimecsController', url: 'api/controller.md' },
-                { title: 'Components', url: 'api/components.md' },
-                { title: 'Systems', url: 'api/systems.md' },
-                { title: 'Data Structures', url: 'api/data-structures.md' },
-                { title: 'Bakers', url: 'api/baker.md' }
-            ]
-        },
-        {
-            section: 'Resources',
-            items: [
-                { title: 'Changelog', url: 'changelog.md' },
-                { title: 'License', url: 'license.md' }
-            ]
-        }
-    ];
+    // Current section tracking
+    let currentSection = 'manual';
 
-    // Build left navigation
-    function buildNavigation() {
+    // Navigation structure
+    const navigation = {
+        manual: [
+            { title: 'About Animecs', url: 'manual/about.md' },
+            { title: 'Getting Started', url: 'manual/getting-started.md' },
+            { title: 'Architecture', url: 'manual/architecture.md' },
+            {
+                title: 'Tutorials',
+                submenu: [
+                    { title: 'Basic Setup', url: 'manual/tutorials/basic-setup.md' },
+                    { title: 'State Machines', url: 'manual/tutorials/state-machines.md' },
+                    { title: 'Blend Trees', url: 'manual/tutorials/blend-trees.md' },
+                    { title: 'LOD System', url: 'manual/tutorials/lod-system.md' },
+                    { title: 'Blend Shapes', url: 'manual/tutorials/blend-shapes.md' }
+                ]
+            },
+            { title: 'Samples', url: 'manual/samples/README.md' },
+            { title: 'Limitations', url: 'manual/limitations.md' }
+        ],
+        api: [
+            { title: 'API Overview', url: 'api/README.md' },
+            { title: 'AnimecsController', url: 'api/controller.md' },
+            { title: 'Components', url: 'api/components.md' },
+            { title: 'Systems', url: 'api/systems.md' },
+            { title: 'Data Structures', url: 'api/data-structures.md' },
+            { title: 'Bakers', url: 'api/baker.md' }
+        ]
+    };
+
+    // Build left navigation based on current section
+    function buildNavigation(section = 'manual') {
         const nav = document.getElementById('leftNav');
+        const items = navigation[section];
         let html = '<ul>';
 
-        navigation.forEach(item => {
-            if (item.section) {
-                html += `<li class="nav-section">${item.section}</li>`;
-                item.items.forEach(subitem => {
-                    if (subitem.submenu) {
-                        html += `<li><a href="#">${subitem.title}</a><ul>`;
-                        subitem.submenu.forEach(sub => {
-                            html += `<li><a href="#${sub.url}">${sub.title}</a></li>`;
-                        });
-                        html += `</ul></li>`;
-                    } else {
-                        html += `<li><a href="#${subitem.url}">${subitem.title}</a></li>`;
-                    }
+        items.forEach((item, index) => {
+            if (item.submenu) {
+                html += `
+            <li class="nav-parent">
+              <a href="#" onclick="toggleSubmenu(${index}); return false;">
+                <span>${item.title}</span>
+                <span class="nav-parent-toggle" id="toggle-${index}">▼</span>
+              </a>
+              <ul id="submenu-${index}">
+          `;
+                item.submenu.forEach(sub => {
+                    html += `<li><a href="#${sub.url}">${sub.title}</a></li>`;
                 });
+                html += `</ul></li>`;
             } else {
                 html += `<li><a href="#${item.url}">${item.title}</a></li>`;
             }
@@ -583,8 +642,22 @@
         nav.innerHTML = html;
     }
 
+    // Toggle submenu
+    function toggleSubmenu(index) {
+        const submenu = document.getElementById(`submenu-${index}`);
+        const toggle = document.getElementById(`toggle-${index}`);
+
+        if (submenu.classList.contains('collapsed')) {
+            submenu.classList.remove('collapsed');
+            toggle.classList.remove('collapsed');
+        } else {
+            submenu.classList.add('collapsed');
+            toggle.classList.add('collapsed');
+        }
+    }
+
     // Load markdown content
-    async function loadContent(file = 'README.md') {
+    async function loadContent(file = 'manual/about.md') {
         try {
             const response = await fetch(file);
             const text = await response.text();
@@ -593,17 +666,21 @@
 
             // Update breadcrumb
             const parts = file.split('/');
-            document.getElementById('breadcrumbCurrent').textContent =
-                parts[parts.length - 1].replace('.md', '').replace('-', ' ');
+            const fileName = parts[parts.length - 1].replace('.md', '').replace(/-/g, ' ');
+            const title = fileName.charAt(0).toUpperCase() + fileName.slice(1);
+            document.getElementById('breadcrumbCurrent').textContent = title;
 
             // Generate TOC
             generateTOC();
 
             // Highlight active nav
             highlightActiveNav(file);
+
+            // Scroll to top
+            document.querySelector('.unity-content').scrollTop = 0;
         } catch (error) {
             document.getElementById('mainContent').innerHTML =
-                `<h1>Error</h1><p>Could not load ${file}</p>`;
+                `<h1>Error</h1><p>Could not load ${file}. Make sure the file exists.</p>`;
         }
     }
 
@@ -613,16 +690,32 @@
         const headings = content.querySelectorAll('h2, h3');
         const tocList = document.getElementById('tocList');
 
+        if (headings.length === 0) {
+            tocList.innerHTML = '<li style="color: #999; font-size: 12px;">No headings found</li>';
+            return;
+        }
+
         let html = '';
+        let currentH2 = null;
+
         headings.forEach(heading => {
             const id = heading.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-');
             heading.id = id;
 
-            const level = heading.tagName === 'H2' ? '' : '<ul>';
-            const levelClose = heading.tagName === 'H2' ? '' : '</ul>';
-
-            html += `${level}<li><a href="#${id}">${heading.textContent}</a></li>${levelClose}`;
+            if (heading.tagName === 'H2') {
+                if (currentH2) {
+                    html += '</ul></li>';
+                }
+                html += `<li><a href="#${id}">${heading.textContent}</a><ul>`;
+                currentH2 = true;
+            } else if (heading.tagName === 'H3') {
+                html += `<li><a href="#${id}">${heading.textContent}</a></li>`;
+            }
         });
+
+        if (currentH2) {
+            html += '</ul></li>';
+        }
 
         tocList.innerHTML = html;
 
@@ -651,31 +744,68 @@
         });
     }
 
+    // Handle navigation tab changes
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            e.preventDefault();
+            const section = tab.dataset.section;
+
+            if (!section) return; // Changelog tab
+
+            // Update active tab
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            // Update breadcrumb
+            document.getElementById('breadcrumbSection').textContent =
+                section === 'manual' ? 'Manual' : 'Scripting API';
+
+            // Rebuild navigation
+            currentSection = section;
+            buildNavigation(section);
+
+            // Load first item
+            const firstItem = navigation[section][0];
+            loadContent(firstItem.url);
+        });
+    });
+
     // Handle hash changes
     window.addEventListener('hashchange', () => {
-        const hash = window.location.hash.substring(1) || 'README.md';
-        loadContent(hash);
+        const hash = window.location.hash.substring(1);
+
+        if (hash && hash !== '') {
+            loadContent(hash);
+        }
     });
 
     // Filter sidebar
     document.getElementById('filterInput').addEventListener('input', (e) => {
         const filter = e.target.value.toLowerCase();
-        document.querySelectorAll('.sidebar-nav a').forEach(link => {
-            const text = link.textContent.toLowerCase();
-            link.style.display = text.includes(filter) ? 'block' : 'none';
+        document.querySelectorAll('.sidebar-nav li').forEach(item => {
+            const link = item.querySelector('a');
+            if (link) {
+                const text = link.textContent.toLowerCase();
+                const parent = item.closest('ul');
+
+                if (text.includes(filter)) {
+                    item.style.display = 'block';
+                    if (parent && parent.id && parent.id.startsWith('submenu-')) {
+                        parent.classList.remove('collapsed');
+                        const toggleId = parent.id.replace('submenu-', 'toggle-');
+                        const toggle = document.getElementById(toggleId);
+                        if (toggle) toggle.classList.remove('collapsed');
+                    }
+                } else {
+                    item.style.display = 'none';
+                }
+            }
         });
     });
 
-    // Search functionality
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-        const query = e.target.value.toLowerCase();
-        // Implement search logic here
-        console.log('Search:', query);
-    });
-
     // Initialize
-    buildNavigation();
-    const initialFile = window.location.hash.substring(1) || 'README.md';
+    buildNavigation('manual');
+    const initialFile = window.location.hash.substring(1) || 'manual/about.md';
     loadContent(initialFile);
 </script>
 </body>
