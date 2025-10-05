@@ -692,7 +692,7 @@
             const href = link.getAttribute('href');
 
             // Skip external links, anchors, and non-.md links
-            if (!href || href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:')) {
+            if (!href || href.startsWith('http') || href.startsWith('mailto:')) {
                 return;
             }
 
@@ -701,24 +701,10 @@
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
 
-                    // Get current file path from hash
-                    let currentPath = window.location.hash.substring(1) || 'manual/about.md';
-                    let currentDir = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
-
-                    // Resolve relative path
-                    let targetPath = href;
-
-                    // Handle parent directory (..)
-                    while (targetPath.startsWith('../')) {
-                        targetPath = targetPath.substring(3);
-                        currentDir = currentDir.substring(0, currentDir.lastIndexOf('/', currentDir.length - 2) + 1);
-                    }
-
-                    // Combine directory with target
-                    let finalPath = targetPath.startsWith('/') ? targetPath.substring(1) : currentDir + targetPath;
-
-                    loadContent(finalPath);
-                    window.location.hash = finalPath;
+                    // Links in markdown are already relative to animecs/ root
+                    // Just use them directly
+                    loadContent(href);
+                    window.location.hash = href;
                 });
             }
         });
