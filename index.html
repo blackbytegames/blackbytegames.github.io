@@ -1,490 +1,256 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Animecs - High-performance GPU animation system for Unity DOTS">
-    <title>Animecs Documentation - Blackbyte Games</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blackbyte Games - Documentation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-    <style>
-        /* ===== ROOT VARIABLES ===== */
-        :root {
-            --header-bg: #1a1a1a;
-            --header-text: #ffffff;
-            --sidebar-bg: #f7f7f7;
-            --sidebar-border: #e0e0e0;
-            --content-bg: #ffffff;
-            --text-primary: #2c2c2c;
-            --text-secondary: #6e6e6e;
-            --link-color: #0066cc;
-            --link-hover: #0052a3;
-            --code-bg: #f5f5f5;
-            --code-border: #e1e1e1;
-            --note-bg: #e7f3ff;
-            --note-border: #0066cc;
-            --warning-bg: #fff4e5;
-            --warning-border: #ff9800;
-        }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-        /* ===== RESET & BASE ===== */
-        * {
-            box-sizing: border-box;
-        }
+    /* Header */
+    .header {
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 20px 40px;
+      color: white;
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-            margin: 0;
-            padding: 0;
-            background: var(--content-bg);
-            color: var(--text-primary);
-            line-height: 1.6;
-        }
+    .header h1 {
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
 
-        /* ===== CUSTOM HEADER ===== */
-        .custom-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            background: var(--header-bg);
-            color: var(--header-text);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
+    .header p {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-top: 5px;
+    }
 
-        .header-logo {
-            font-size: 20px;
-            font-weight: 600;
-            margin-right: 40px;
-            white-space: nowrap;
-        }
+    /* Main Container */
+    .container {
+      flex: 1;
+      max-width: 1200px;
+      margin: 60px auto;
+      padding: 0 40px;
+      width: 100%;
+    }
 
-        .header-nav {
-            display: flex;
-            gap: 30px;
-            flex: 1;
-        }
+    .intro {
+      text-align: center;
+      color: white;
+      margin-bottom: 60px;
+    }
 
-        .header-nav a {
-            color: var(--header-text);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: opacity 0.2s;
-        }
+    .intro h2 {
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+    }
 
-        .header-nav a:hover {
-            opacity: 0.7;
-        }
+    .intro p {
+      font-size: 20px;
+      opacity: 0.9;
+    }
 
-        .header-search {
-            margin-left: auto;
-            margin-right: 20px;
-        }
+    /* Product Grid */
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-bottom: 60px;
+    }
 
-        .header-cta {
-            background: #00a8e6;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            transition: background 0.2s;
-            white-space: nowrap;
-        }
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      transition: transform 0.3s, box-shadow 0.3s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
 
-        .header-cta:hover {
-            background: #0088bb;
-        }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 50px rgba(0,0,0,0.25);
+    }
 
-        /* ===== ADJUST DOCSIFY LAYOUT ===== */
-        body {
-            padding-top: 60px;
-        }
+    .product-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
 
-        .sidebar {
-            top: 60px !important;
-            height: calc(100vh - 60px) !important;
-            background: var(--sidebar-bg) !important;
-            border-right: 1px solid var(--sidebar-border) !important;
-            padding-top: 20px !important;
-        }
+    .product-card h3 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+    }
 
-        .sidebar-nav {
-            padding-bottom: 40px;
-        }
+    .product-card .version {
+      display: inline-block;
+      background: #667eea;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
 
-        .sidebar-nav ul {
-            padding-left: 0;
-            list-style: none;
-        }
+    .product-card p {
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
 
-        .sidebar-nav > ul > li {
-            margin: 0;
-        }
+    .product-card .cta {
+      color: #667eea;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-        .sidebar-nav > ul > li > p {
-            font-weight: 700;
-            font-size: 13px;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            margin: 20px 0 8px 25px;
-            letter-spacing: 0.5px;
-        }
+    .product-card .cta::after {
+      content: '→';
+      transition: transform 0.3s;
+    }
 
-        .sidebar-nav a {
-            color: var(--text-primary);
-            text-decoration: none;
-            display: block;
-            padding: 6px 25px;
-            font-size: 14px;
-            border-left: 3px solid transparent;
-            transition: all 0.2s;
-        }
+    .product-card:hover .cta::after {
+      transform: translateX(5px);
+    }
 
-        .sidebar-nav a:hover {
-            background: rgba(0, 0, 0, 0.03);
-            border-left-color: var(--link-color);
-        }
+    .coming-soon {
+      opacity: 0.6;
+      position: relative;
+    }
 
-        .sidebar-nav a.active {
-            color: var(--link-color);
-            font-weight: 600;
-            border-left-color: var(--link-color);
-            background: rgba(0, 102, 204, 0.05);
-        }
+    .coming-soon::before {
+      content: 'COMING SOON';
+      position: absolute;
+      top: 32px;
+      right: 32px;
+      background: #ff9800;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
 
-        .sidebar-nav ul ul {
-            padding-left: 15px;
-        }
+    /* Footer */
+    .footer {
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 30px 40px;
+      text-align: center;
+    }
 
-        .sidebar-nav ul ul a {
-            font-size: 13px;
-            padding: 5px 25px;
-        }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 15px;
+    }
 
-        /* ===== MAIN CONTENT ===== */
-        .content {
-            padding-top: 40px !important;
-            left: 300px;
-            top: 60px !important;
-        }
+    .footer-links a {
+      color: white;
+      text-decoration: none;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
 
-        .markdown-section {
-            max-width: 900px;
-            padding: 30px 50px 80px 50px;
-        }
+    .footer-links a:hover {
+      opacity: 1;
+    }
 
-        .markdown-section h1 {
-            font-size: 36px;
-            font-weight: 700;
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: var(--text-primary);
-            border-bottom: 1px solid #e0e0e0;
-            padding-bottom: 15px;
-        }
+    .footer p {
+      opacity: 0.6;
+      font-size: 14px;
+    }
 
-        .markdown-section h2 {
-            font-size: 28px;
-            font-weight: 600;
-            margin-top: 40px;
-            margin-bottom: 16px;
-            color: var(--text-primary);
-        }
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 20px;
+        margin: 40px auto;
+      }
 
-        .markdown-section h3 {
-            font-size: 22px;
-            font-weight: 600;
-            margin-top: 30px;
-            margin-bottom: 12px;
-            color: var(--text-primary);
-        }
+      .intro h2 {
+        font-size: 36px;
+      }
 
-        .markdown-section h4 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-top: 24px;
-            margin-bottom: 10px;
-            color: var(--text-primary);
-        }
-
-        .markdown-section p {
-            margin: 16px 0;
-            font-size: 15px;
-            line-height: 1.7;
-        }
-
-        .markdown-section a {
-            color: var(--link-color);
-            text-decoration: none;
-            border-bottom: 1px solid transparent;
-            transition: border-color 0.2s;
-        }
-
-        .markdown-section a:hover {
-            border-bottom-color: var(--link-color);
-        }
-
-        .markdown-section ul,
-        .markdown-section ol {
-            padding-left: 30px;
-            margin: 16px 0;
-        }
-
-        .markdown-section li {
-            margin: 8px 0;
-            line-height: 1.7;
-        }
-
-        /* ===== CODE BLOCKS ===== */
-        .markdown-section pre {
-            background: var(--code-bg) !important;
-            border: 1px solid var(--code-border);
-            border-radius: 6px;
-            padding: 16px;
-            margin: 20px 0;
-            overflow-x: auto;
-        }
-
-        .markdown-section code {
-            background: var(--code-bg);
-            border: 1px solid var(--code-border);
-            border-radius: 3px;
-            padding: 2px 6px;
-            font-size: 13px;
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            color: #333;
-        }
-
-        .markdown-section pre > code {
-            background: transparent;
-            border: none;
-            padding: 0;
-            color: #333;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        /* ===== NOTE BOXES ===== */
-        .markdown-section blockquote {
-            border-left: 4px solid var(--note-border);
-            background: var(--note-bg);
-            padding: 16px 20px;
-            margin: 20px 0;
-            border-radius: 4px;
-        }
-
-        .markdown-section blockquote p {
-            margin: 0;
-        }
-
-        .markdown-section blockquote.warning {
-            border-left-color: var(--warning-border);
-            background: var(--warning-bg);
-        }
-
-        /* ===== TABLES ===== */
-        .markdown-section table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 14px;
-        }
-
-        .markdown-section table th {
-            background: #f5f5f5;
-            border: 1px solid #e0e0e0;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        .markdown-section table td {
-            border: 1px solid #e0e0e0;
-            padding: 12px;
-        }
-
-        .markdown-section table tr:nth-child(even) {
-            background: #fafafa;
-        }
-
-        /* ===== SEARCH BOX IN HEADER ===== */
-        .search {
-            border: none !important;
-            margin: 0 !important;
-        }
-
-        .search input {
-            background: rgba(255, 255, 255, 0.15) !important;
-            border: 1px solid rgba(255, 255, 255, 0.3) !important;
-            color: white !important;
-            padding: 8px 16px !important;
-            border-radius: 4px !important;
-            width: 250px !important;
-            font-size: 14px !important;
-        }
-
-        .search input::placeholder {
-            color: rgba(255, 255, 255, 0.6) !important;
-        }
-
-        .search input:focus {
-            background: rgba(255, 255, 255, 0.25) !important;
-            border-color: rgba(255, 255, 255, 0.5) !important;
-            outline: none !important;
-        }
-
-        /* ===== HIDE DEFAULT DOCSIFY NAVBAR ===== */
-        nav.app-nav {
-            display: none !important;
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media screen and (max-width: 768px) {
-            .custom-header {
-                flex-wrap: wrap;
-                height: auto;
-                padding: 10px;
-            }
-
-            .header-nav {
-                order: 3;
-                width: 100%;
-                margin-top: 10px;
-                gap: 15px;
-            }
-
-            .header-search {
-                order: 2;
-                margin-left: auto;
-                margin-right: 10px;
-            }
-
-            .search input {
-                width: 150px !important;
-            }
-
-            .sidebar {
-                transform: translateX(-300px);
-            }
-
-            .content {
-                left: 0 !important;
-            }
-
-            .markdown-section {
-                padding: 20px;
-            }
-        }
-
-        /* ===== COPY CODE BUTTON ===== */
-        .docsify-copy-code-button {
-            background: var(--link-color) !important;
-            color: white !important;
-            font-size: 12px !important;
-        }
-
-        .docsify-copy-code-button:hover {
-            background: var(--link-hover) !important;
-        }
-    </style>
+      .products {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-<!-- Custom Header -->
-<div class="custom-header">
-    <div class="header-logo">Blackbyte Documentation</div>
-    <nav class="header-nav">
-        <a href="#/">Manual</a>
-        <a href="#/api/">Scripting API</a>
-        <a href="#/changelog">Changelog</a>
-        <a href="#/license">License</a>
-    </nav>
-    <div class="header-search">
-        <input type="search" placeholder="Search..." class="search-input" />
+  <div class="header">
+    <h1>Blackbyte Games</h1>
+    <p>High-performance tools for Unity developers</p>
+  </div>
+
+  <div class="container">
+    <div class="intro">
+      <h2>Documentation Hub</h2>
+      <p>Choose a product to view its documentation</p>
     </div>
-    <a href="https://assetstore.unity.com" target="_blank" class="header-cta">Asset Store →</a>
-</div>
 
-<!-- Docsify Content -->
-<div id="app">Loading...</div>
+    <div class="products">
+      <!-- Animecs -->
+      <a href="animecs/" class="product-card">
+        <div class="product-icon">🎮</div>
+        <h3>Animecs</h3>
+        <span class="version">v1.0.0</span>
+        <p>High-performance GPU animation system for Unity DOTS. Animate thousands of characters with state machines, blend trees, and automatic LOD.</p>
+        <span class="cta">View Documentation</span>
+      </a>
 
-<script>
-    window.$docsify = {
-        name: '',  // Empty because we use custom header
-        repo: '',  // Add your repo URL here if you want GitHub corner
-        loadSidebar: true,
-        loadNavbar: false,  // We use custom header instead
-        subMaxLevel: 3,
-        auto2top: true,
-        maxLevel: 4,
+      <!-- Future Product 1 -->
+      <div class="product-card coming-soon">
+        <div class="product-icon">⚡</div>
+        <h3>Your Next Tool</h3>
+        <span class="version">v0.1.0</span>
+        <p>Description of your upcoming tool or system. This card will be clickable once documentation is ready.</p>
+        <span class="cta">Coming Soon</span>
+      </div>
 
-        search: {
-            maxAge: 86400000,
-            paths: 'auto',
-            placeholder: 'Search',
-            noData: 'No results found',
-            depth: 3,
-            hideOtherSidebarContent: false
-        },
+      <!-- Future Product 2 -->
+      <div class="product-card coming-soon">
+        <div class="product-icon">🚀</div>
+        <h3>Another System</h3>
+        <span class="version">v0.1.0</span>
+        <p>Placeholder for another tool you're building. Keep the hub organized as you grow.</p>
+        <span class="cta">Coming Soon</span>
+      </div>
+    </div>
+  </div>
 
-        alias: {
-            '/.*/_sidebar.md': '/_sidebar.md'
-        },
-
-        // Pagination
-        pagination: {
-            previousText: '← Previous',
-            nextText: 'Next →',
-            crossChapter: true,
-            crossChapterText: true
-        },
-
-        // Custom 404 page
-        notFoundPage: true
-    }
-</script>
-
-<!-- Docsify Core -->
-<script src="//cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
-
-<!-- Search Plugin -->
-<script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
-
-<!-- Code Highlighting -->
-<script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-csharp.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
-
-<!-- Copy Code Button -->
-<script src="//cdn.jsdelivr.net/npm/docsify-copy-code@2/dist/docsify-copy-code.min.js"></script>
-
-<!-- Pagination -->
-<script src="//cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script>
-
-<!-- Custom search integration with header -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Link header search to Docsify search
-        const headerSearch = document.querySelector('.header-search input');
-
-        // Wait for Docsify search to initialize
-        setTimeout(() => {
-            const docsifySearch = document.querySelector('.search input');
-            if (docsifySearch && headerSearch) {
-                headerSearch.addEventListener('input', (e) => {
-                    docsifySearch.value = e.target.value;
-                    docsifySearch.dispatchEvent(new Event('input'));
-                });
-            }
-        }, 1000);
-    });
-</script>
+  <div class="footer">
+    <div class="footer-links">
+      <a href="https://github.com/blackbytegames">GitHub</a>
+      <a href="mailto:sridogames@gmail.com">Contact</a>
+      <a href="https://assetstore.unity.com">Asset Store</a>
+    </div>
+    <p>&copy; 2025 Blackbyte Games. All rights reserved.</p>
+  </div>
 </body>
 </html>

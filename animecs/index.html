@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animecs Documentation</title>
+
+    <style>
+        /* ===== UNITY-INSPIRED THEME ===== */
+        :root {
+            /* Colors matching Unity docs */
+            --unity-dark: #222c37;
+            --unity-sidebar: #f5f5f5;
+            --unity-border: #d8d8d8;
+            --unity-blue: #0066cc;
+            --unity-blue-hover: #0052a3;
+            --unity-text: #2c2c2c;
+            --unity-text-light: #6b6b6b;
+            --unity-code-bg: #f6f8fa;
+            --unity-code-border: #e1e4e8;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 15px;
+            line-height: 1.65;
+            color: var(--unity-text);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ===== FIXED HEADER BAR ===== */
+        .unity-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: var(--unity-dark);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+
+        .unity-header-logo {
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            margin-right: 32px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .unity-header-logo:hover {
+            opacity: 0.9;
+        }
+
+        .unity-header-breadcrumb {
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+        }
+
+        .unity-header-breadcrumb a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+        }
+
+        .unity-header-breadcrumb a:hover {
+            color: white;
+        }
+
+        .unity-header-tabs {
+            display: flex;
+            gap: 24px;
+            margin-left: auto;
+            margin-right: 24px;
+        }
+
+        .unity-header-tabs a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 14px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .unity-header-tabs a:hover {
+            color: white;
+            border-bottom-color: rgba(255,255,255,0.5);
+        }
+
+        .unity-header-tabs a.active {
+            color: white;
+            border-bottom-color: white;
+        }
+
+        .unity-header-store {
+            background: #00a8e6;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .unity-header-store:hover {
+            background: #0088bb;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            top: 50px !important;
+            bottom: 0 !important;
+            background: var(--unity-sidebar) !important;
+            border-right: 1px solid var(--unity-border) !important;
+            width: 280px !important;
+            padding: 0 !important;
+            overflow-y: auto;
+        }
+
+        .sidebar-nav {
+            padding: 24px 0 40px 0;
+        }
+
+        .sidebar-nav > ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-nav li {
+            list-style: none;
+        }
+
+        /* Section headers */
+        .sidebar-nav > ul > li > p,
+        .sidebar-nav > ul > li > strong {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #888;
+            padding: 16px 24px 8px 24px;
+            margin: 0;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            color: var(--unity-text);
+            text-decoration: none;
+            padding: 6px 24px;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+            transition: all 0.15s;
+        }
+
+        .sidebar-nav a:hover {
+            background: rgba(0,0,0,0.04);
+            color: var(--unity-blue);
+        }
+
+        .sidebar-nav a.active {
+            background: rgba(0,102,204,0.08);
+            border-left-color: var(--unity-blue);
+            color: var(--unity-blue);
+            font-weight: 500;
+        }
+
+        .sidebar-nav ul ul {
+            padding-left: 0;
+        }
+
+        .sidebar-nav ul ul a {
+            padding-left: 44px;
+            font-size: 13px;
+        }
+
+        .sidebar-nav ul ul ul a {
+            padding-left: 64px;
+            font-size: 13px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        body {
+            padding-top: 50px;
+        }
+
+        .content {
+            left: 280px !important;
+            top: 50px !important;
+            padding-top: 0 !important;
+        }
+
+        .markdown-section {
+            max-width: 860px;
+            padding: 48px 64px 120px 64px;
+        }
+
+        /* Typography */
+        .markdown-section h1 {
+            font-size: 42px;
+            font-weight: 300;
+            margin: 0 0 8px 0;
+            padding: 0;
+            border: none;
+            color: var(--unity-text);
+        }
+
+        .markdown-section h1 + p {
+            font-size: 18px;
+            color: var(--unity-text-light);
+            margin: 0 0 32px 0;
+        }
+
+        .markdown-section h2 {
+            font-size: 32px;
+            font-weight: 300;
+            margin: 56px 0 24px 0;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e8e8e8;
+            color: var(--unity-text);
+        }
+
+        .markdown-section h3 {
+            font-size: 24px;
+            font-weight: 400;
+            margin: 40px 0 16px 0;
+            color: var(--unity-text);
+        }
+
+        .markdown-section h4 {
+            font-size: 18px;
+            font-weight: 500;
+            margin: 32px 0 12px 0;
+            color: var(--unity-text);
+        }
+
+        .markdown-section p {
+            margin: 16px 0;
+            line-height: 1.7;
+        }
+
+        .markdown-section a {
+            color: var(--unity-blue);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+        }
+
+        .markdown-section a:hover {
+            border-bottom-color: var(--unity-blue);
+        }
+
+        .markdown-section ul,
+        .markdown-section ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        .markdown-section li {
+            margin: 8px 0;
+            line-height: 1.65;
+        }
+
+        /* Code blocks */
+        .markdown-section pre {
+            background: var(--unity-code-bg) !important;
+            border: 1px solid var(--unity-code-border);
+            border-radius: 4px;
+            padding: 20px;
+            margin: 24px 0;
+            overflow-x: auto;
+        }
+
+        .markdown-section code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 14px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+            color: #333;
+        }
+
+        .markdown-section pre > code {
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* Note boxes (blockquotes) */
+        .markdown-section blockquote {
+            border-left: 4px solid #0066cc;
+            background: #f0f7ff;
+            padding: 16px 20px;
+            margin: 24px 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .markdown-section blockquote p {
+            margin: 0;
+        }
+
+        /* Tables */
+        .markdown-section table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 14px;
+        }
+
+        .markdown-section table th {
+            background: #f8f8f8;
+            border: 1px solid var(--unity-border);
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .markdown-section table td {
+            border: 1px solid var(--unity-border);
+            padding: 12px 16px;
+        }
+
+        .markdown-section table tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        /* Search */
+        .search {
+            margin: 0 !important;
+            padding: 24px !important;
+            border-bottom: 1px solid var(--unity-border) !important;
+        }
+
+        .search input {
+            width: 100% !important;
+            padding: 8px 12px !important;
+            border: 1px solid var(--unity-border) !important;
+            border-radius: 4px !important;
+            font-size: 14px !important;
+            background: white !important;
+        }
+
+        .search input:focus {
+            outline: none !important;
+            border-color: var(--unity-blue) !important;
+        }
+
+        /* Copy code button */
+        .docsify-copy-code-button {
+            background: var(--unity-blue) !important;
+            color: white !important;
+            font-size: 11px !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .unity-header-tabs {
+                display: none;
+            }
+
+            .sidebar {
+                transform: translateX(-280px);
+            }
+
+            .content {
+                left: 0 !important;
+            }
+
+            .markdown-section {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Unity-style Header -->
+<div class="unity-header">
+    <a href="/" class="unity-header-logo">
+        ← Blackbyte Docs
+    </a>
+    <div class="unity-header-breadcrumb">
+        <span>Animecs</span>
+    </div>
+    <nav class="unity-header-tabs">
+        <a href="#/" class="active">Manual</a>
+        <a href="#/api/">Scripting API</a>
+        <a href="#/changelog">Changelog</a>
+        <a href="#/license">License</a>
+    </nav>
+    <a href="https://assetstore.unity.com" class="unity-header-store">Asset Store</a>
+</div>
+
+<div id="app">Loading...</div>
+
+<script>
+    window.$docsify = {
+        name: '',
+        repo: '',
+        loadSidebar: true,
+        subMaxLevel: 3,
+        auto2top: true,
+
+        search: {
+            paths: 'auto',
+            placeholder: 'Search documentation',
+            noData: 'No results',
+            depth: 4
+        },
+
+        alias: {
+            '/.*/_sidebar.md': '/_sidebar.md'
+        }
+    }
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+<script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-csharp.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/docsify-copy-code@2"></script>
+</body>
+</html>
