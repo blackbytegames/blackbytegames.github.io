@@ -223,7 +223,7 @@ Multiple characters share assets if using same rig.
 
 ### Optimization
 
-**Reduce frame count:** Lower target FPS (e.g., 20 FPS for distant characters)
+**Reduce frame count:** Lower target FPS in animations.
 
 **Share skeletons:** Reuse same prefab for character variants
 

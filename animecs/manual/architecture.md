@@ -194,9 +194,8 @@ Hash calculated from:
 - Temporal LOD distribution prevents spikes
 
 **Costs:**
-- Large blob assets (pre-sampled data vs compressed curves)
-- Baking time for large animation libraries
-- Brief performance dip during state transitions (sampling two states)
+- Baking takes time for large animation libraries in the animator.
+- Entities Graphics may affect if the world contains too many deformed meshes in a single GraphicsBuffer. 
 
 ## Extension Points
 

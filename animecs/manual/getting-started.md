@@ -42,8 +42,6 @@ Create or assign an Animator Controller with:
 - Parameters (if using transitions)
 - Blend trees (if needed)
 
-**Important:** Set the Animator's culling mode to `Always Animate`. This ensures animations sample correctly during baking.
-
 ### 3. Model Import Settings
 
 In your character's import settings:
@@ -115,6 +113,8 @@ In Play mode, you'll see:
 - Active blend tree motions (if using blend trees)
 
 This appears as an overlay above each character. Useful for debugging state transitions and LOD behavior.
+
+**Important:** Performance will be heavily impacted since this component is rendering in-game UI every frame and it is not burst compiled. Disable this component in production builds.
 
 ## Pro Tip: Finish Animator Work First
 
