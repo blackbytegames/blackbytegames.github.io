@@ -193,23 +193,6 @@ AnimecsController.SetStatePaused(ref stateData, paused: false);
 entityManager.SetComponentData(entity, stateData);
 ```
 
-## Best Practices
-
-**Cache parameter hashes** - Calculate once, reuse:
-```csharp
-static readonly int SpeedHash = Animator.StringToHash("Speed");
-```
-
-**Use state indices for fixed states** - Faster than name lookup:
-```csharp
-const int IdleStateIndex = 0;
-AnimecsController.Play(ECB, index, entity, IdleStateIndex, 0.2f);
-```
-
-**Set (float/int) parameters every frame** - Animecs evaluates transitions continuously. Don't worry about "spamming" parameter updates.
-
-**Transition durations matter** - 0.1-0.3s for responsive movement, 0.5-1.0s for dramatic changes.
-
 ## Common Issues
 
 **"Parameter not found"** - Your Animator Controller doesn't have this parameter. Check spelling and hash calculation.
