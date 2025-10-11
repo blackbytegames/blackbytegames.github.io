@@ -1,56 +1,28 @@
 # AnimecsController
 
-Static API for controlling animations at runtime. All methods are Burst-compatible.
+Static API for runtime animation control. All methods Burst-compatible unless noted.
+
+---
 
 ## State Control
 
-### Play (By Name)
+### Play
 
 ```csharp
-static void Play(
-    EntityCommandBuffer.ParallelWriter ecb,
-    int index,
-    Entity entity,
-    FixedString64Bytes stateName,
-    float transitionDuration,
-    AnimecsCurveType curveType = AnimecsCurveType.Smooth,
-    bool overrideExitTime = false,
-    bool resetTime = true)
+static void Play(ref EntityCommandBuffer.ParallelWriter ecb, [EntityIndexInQuery] int index, 
+    in Entity entity, in FixedString64Bytes stateName, float transitionDuration, 
+    AnimecsCurveType curveType = AnimecsCurveType.Smooth, bool overrideExitTime = false, bool resetTime = true)
+
+static void Play(ref EntityCommandBuffer.ParallelWriter ecb, [EntityIndexInQuery] int index, 
+    in Entity entity, string stateName, float transitionDuration, 
+    AnimecsCurveType curveType = AnimecsCurveType.Smooth, bool overrideExitTime = false, bool resetTime = true)
+
+static void Play(ref EntityCommandBuffer.ParallelWriter ecb, [EntityIndexInQuery] int index, 
+    in Entity entity, int stateIndex, float transitionDuration, 
+    AnimecsCurveType curveType = AnimecsCurveType.Smooth, bool overrideExitTime = false, bool resetTime = true)
 ```
 
-Transitions to target state by name.
-
-**Parameters:**
-- `ecb` - Entity command buffer for deferred execution
-- `index` - Entity index in query
-- `entity` - Target entity
-- `stateName` - State name from Animator Controller
-- `transitionDuration` - Blend time in seconds (0 = instant)
-- `curveType` - Blend interpolation curve
-- `overrideExitTime` - Ignore exit time requirement
-- `resetTime` - Start target state at time 0
-
-**String Overload:**
-```csharp
-static void Play(EntityCommandBuffer.ParallelWriter ecb, int index, Entity entity, 
-                 string stateName, float transitionDuration, ...)
-```
-
-### Play (By Index)
-
-```csharp
-static void Play(
-    EntityCommandBuffer.ParallelWriter ecb,
-    int index,
-    Entity entity,
-    int stateIndex,
-    float transitionDuration,
-    AnimecsCurveType curveType = AnimecsCurveType.Smooth,
-    bool overrideExitTime = false,
-    bool resetTime = true)
-```
-
-Transitions to target state by index. Faster than name lookup.
+Transitions to target state by name or index.
 
 ### SetStatePaused
 
@@ -58,7 +30,7 @@ Transitions to target state by index. Faster than name lookup.
 static void SetStatePaused(ref AnimecsStateData stateData, bool paused)
 ```
 
-Pauses or resumes animation time progression. Modify `AnimecsStateData` directly, then write back to entity.
+Pauses or resumes animation time progression.
 
 ### SetKeyframeOnlyMode
 
@@ -66,32 +38,47 @@ Pauses or resumes animation time progression. Modify `AnimecsStateData` directly
 static void SetKeyframeOnlyMode(ref AnimecsStateData stateData, bool keyframeOnly)
 ```
 
-Disables frame interpolation when enabled. Forces exact keyframe sampling.
+Disables frame interpolation.
+
+### SetStateTime
+
+```csharp
+static void SetStateTime(EntityManager entityManager, Entity entity, float time)
+static void SetStateTime(ref AnimecsStateData stateData, float time)
+```
+
+Sets current state playback time in seconds.
+
+---
 
 ## Parameter Control
 
 ### SetFloat
 
 ```csharp
-static void SetFloat(EntityManager entityManager, Entity entity, 
-                     int parameterHash, float value)
+static void SetFloat(EntityManager entityManager, Entity entity, int parameterHash, float value)
+static void SetFloat(ref BufferLookup<AnimecsFloatParameter> floatLookup, 
+    ref AnimecsParameterBlobAsset paramBlob, in Entity entity, int parameterHash, float value)
 ```
 
-Sets float parameter value. Hash from `Animator.StringToHash()`.
+Sets float parameter value.
 
 ### GetFloat
 
 ```csharp
 static float GetFloat(EntityManager entityManager, Entity entity, int parameterHash)
+static float GetFloat(ref BufferLookup<AnimecsFloatParameter> floatLookup, 
+    ref AnimecsParameterBlobAsset paramBlob, in Entity entity, int parameterHash)
 ```
 
-Reads float parameter value. Returns 0 if parameter not found.
+Gets float parameter value. Returns 0 if not found.
 
 ### SetInt
 
 ```csharp
-static void SetInt(EntityManager entityManager, Entity entity, 
-                   int parameterHash, int value)
+static void SetInt(EntityManager entityManager, Entity entity, int parameterHash, int value)
+static void SetInt(ref BufferLookup<AnimecsIntParameter> intLookup, 
+    ref AnimecsParameterBlobAsset paramBlob, in Entity entity, int parameterHash, int value)
 ```
 
 Sets int parameter value.
@@ -100,15 +87,18 @@ Sets int parameter value.
 
 ```csharp
 static int GetInt(EntityManager entityManager, Entity entity, int parameterHash)
+static int GetInt(ref BufferLookup<AnimecsIntParameter> intLookup, 
+    ref AnimecsParameterBlobAsset paramBlob, in Entity entity, int parameterHash)
 ```
 
-Reads int parameter value. Returns 0 if parameter not found.
+Gets int parameter value. Returns 0 if not found.
 
 ### SetBool
 
 ```csharp
-static void SetBool(EntityManager entityManager, Entity entity, 
-                    int parameterHash, bool value)
+static void SetBool(EntityManager entityManager, Entity entity, int parameterHash, bool value)
+static void SetBool(ref BufferLookup<AnimecsBoolParameter> boolLookup, 
+    ref AnimecsParameterBlobAsset paramBlob, in Entity entity, int parameterHash, bool value)
 ```
 
 Sets bool parameter value.
@@ -117,14 +107,18 @@ Sets bool parameter value.
 
 ```csharp
 static bool GetBool(EntityManager entityManager, Entity entity, int parameterHash)
+static bool GetBool(ref BufferLookup<AnimecsBoolParameter> boolLookup, 
+    ref AnimecsParameterBlobAsset paramBlob, in Entity entity, int parameterHash)
 ```
 
-Reads bool parameter value. Returns false if parameter not found.
+Gets bool parameter value. Returns false if not found.
 
 ### SetTrigger
 
 ```csharp
 static void SetTrigger(EntityManager entityManager, Entity entity, int parameterHash)
+static void SetTrigger(ref BufferLookup<AnimecsTriggerParameter> triggerLookup, 
+    ref AnimecsParameterBlobAsset paramBlob, in Entity entity, int parameterHash)
 ```
 
 Activates trigger parameter. Automatically resets after transition.
@@ -133,9 +127,15 @@ Activates trigger parameter. Automatically resets after transition.
 
 ```csharp
 static void ResetTrigger(EntityManager entityManager, Entity entity, int parameterHash)
+static void ResetTrigger(ref BufferLookup<AnimecsTriggerParameter> triggerLookup, 
+    ref AnimecsParameterBlobAsset paramBlob, in Entity entity, int parameterHash)
 ```
 
 Manually resets trigger parameter to false.
+
+**NOTE**: Methods with `EntityManager` parameter are NOT Burst-compatible and must be used on the main thread.
+
+---
 
 ## State Queries
 
@@ -174,8 +174,7 @@ Returns blend progress (0-1). Returns 0 if not transitioning.
 ### FindStateIndex
 
 ```csharp
-static int FindStateIndex(ref AnimecsStateMachineBlobAsset stateMachine, 
-                          FixedString64Bytes stateName)
+static int FindStateIndex(ref AnimecsStateMachineBlobAsset stateMachine, in FixedString64Bytes stateName)
 ```
 
 Finds state index by name. Returns -1 if not found.
@@ -183,13 +182,31 @@ Finds state index by name. Returns -1 if not found.
 ### GetStateName
 
 ```csharp
-static FixedString64Bytes GetStateName(ref AnimecsStateMachineBlobAsset stateMachine, 
-                                        int stateIndex)
+static FixedString64Bytes GetStateName(ref AnimecsStateMachineBlobAsset stateMachine, int stateIndex)
+static bool GetStateName(ref AnimecsStateMachineBlobAsset stateMachine, int stateIndex, out FixedString64Bytes stateName)
 ```
 
-Returns state name by index. Returns empty string if index invalid.
+Gets state name by index. Returns empty string or false if invalid index.
+
+### GetNormalizedStateTime
+
+```csharp
+static float GetNormalizedStateTime(in AnimecsStateData stateData, ref AnimecsStateMachineBlobAsset stateMachine)
+```
+
+Returns normalized state time (0-1).
+
+---
 
 ## LOD Control
+
+### SetLODCamera
+
+```csharp
+static void SetLODCamera(EntityManager entityManager, UnityEngine.Camera camera)
+```
+
+Sets camera for LOD calculations and frustum culling. Creates or updates `AnimecsCameraManaged` entity. **NOT Burst-compatible.**
 
 ### GetLODConfig
 
@@ -197,12 +214,12 @@ Returns state name by index. Returns empty string if index invalid.
 static AnimecsLODConfig GetLODConfig(EntityManager entityManager)
 ```
 
-Retrieves global LOD configuration. Returns default config if singleton doesn't exist.
+Retrieves global LOD configuration. Returns default if singleton doesn't exist.
 
 ### SetLODConfig
 
 ```csharp
-static void SetLODConfig(EntityCommandBuffer ecb, AnimecsLODConfig config)
+static void SetLODConfig(EntityManager entityManager, AnimecsLODConfig config)
 ```
 
 Updates global LOD configuration.
@@ -211,25 +228,26 @@ Updates global LOD configuration.
 
 ```csharp
 static void SetLODLevel(EntityManager entityManager, Entity entity, AnimecsLODLevel level)
+static void SetLODLevel(ref ComponentLookup<AnimecsLOD> lodLookup, in Entity entity, 
+    AnimecsLODLevel level, byte updateFrequency)
 ```
 
-Forces specific LOD level for entity. Disables automatic LOD calculation.
+Forces specific LOD level. Disables automatic LOD calculation.
 
-**LOD Levels:**
-- `High` - Every frame update
-- `Medium` - Every 2 frames (default)
-- `Low` - Every 8 frames (default)
-- `Off` - No updates
+**Levels:** `High` (every frame), `Medium` (every 2 frames), `Low` (every 4 frames), `Off` (no updates)
 
 ### GetLODLevel
 
 ```csharp
 static AnimecsLODLevel GetLODLevel(EntityManager entityManager, Entity entity)
+static AnimecsLODLevel GetLODLevel(ref ComponentLookup<AnimecsLOD> lodLookup, in Entity entity)
 ```
 
-Returns current LOD level for entity.
+Returns current LOD level.
 
-## Utility Functions
+---
+
+## Utility
 
 ### HasStateMachineSupport
 
@@ -237,109 +255,6 @@ Returns current LOD level for entity.
 static bool HasStateMachineSupport(EntityManager entityManager, Entity entity)
 ```
 
-Checks if entity has required Animecs components.
-
-### GetStateCount
-
-```csharp
-static int GetStateCount(EntityManager entityManager, Entity entity)
-```
-
-Returns total number of states in entity's state machine. Returns 0 if no state machine.
-
-### GetParameterCount
-
-```csharp
-static int GetParameterCount(EntityManager entityManager, Entity entity)
-```
-
-Returns total number of parameters. Returns 0 if no parameters.
-
-### MapVelocityToStateName
-
-```csharp
-static FixedString64Bytes MapVelocityToStateName(
-    float3 velocity,
-    float walkingThreshold = 0.5f,
-    float runningThreshold = 3f)
-```
-
-Converts velocity magnitude to locomotion state name ("Idle", "Walking", or "Running").
-
-## Curve Types
-
-```csharp
-public enum AnimecsCurveType : byte
-{
-    Linear,   // Constant blend speed
-    Smooth,   // Ease in and out (default)
-    EaseIn,   // Slow start, fast end
-    EaseOut   // Fast start, slow end
-}
-```
-
-## Usage Examples
-
-### Basic State Control
-
-```csharp
-[BurstCompile]
-partial struct PlayerControlJob : IJobEntity
-{
-    public EntityCommandBuffer.ParallelWriter ECB;
-
-    void Execute([EntityIndexInQuery] int index, Entity entity, in PlayerInput input)
-    {
-        if (input.JumpPressed)
-        {
-            AnimecsController.Play(ECB, index, entity, "Jump", 
-                transitionDuration: 0.15f,
-                curveType: AnimecsCurveType.EaseOut,
-                overrideExitTime: true);
-        }
-    }
-}
-```
-
-### Parameter-Driven Locomotion
-
-```csharp
-var entityManager = state.EntityManager;
-int speedHash = Animator.StringToHash("Speed");
-
-foreach (var (velocity, entity) in 
-    SystemAPI.Query<RefRO<CharacterVelocity>>()
-             .WithAll<AnimecsTag>()
-             .WithEntityAccess())
-{
-    float speed = math.length(velocity.ValueRO.Value);
-    AnimecsController.SetFloat(entityManager, entity, speedHash, speed);
-}
-```
-
-### Reading Animation State
-
-```csharp
-var stateData = entityManager.GetComponentData<AnimecsStateData>(entity);
-
-if (AnimecsController.IsTransitioning(stateData))
-{
-    float progress = AnimecsController.GetTransitionProgress(stateData);
-    // Apply visual effect during transition
-}
-
-float animTime = AnimecsController.GetCurrentStateTime(stateData);
-// Sync gameplay with animation timing
-```
-
-### Manual LOD Override
-
-```csharp
-// Boss entity always runs at high quality
-if (entityManager.HasComponent<BossTag>(entity))
-{
-    AnimecsController.SetLODLevel(entityManager, entity, AnimecsLODLevel.High);
-}
-```
+Checks if entity has required Animecs components (`AnimecsTag`, `AnimecsStateData`, `AnimecsStateMachineBlob`).
 
 ---

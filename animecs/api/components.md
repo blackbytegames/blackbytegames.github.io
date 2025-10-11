@@ -51,6 +51,13 @@ Links renderer entity to its state machine root entity.
 
 ## LOD Components
 
+### AnimecsCameraManaged
+
+Managed component holding Unity Camera reference for LOD calculations. Optional singleton.
+
+**Fields:**
+- `Camera` - Unity Camera reference
+
 ### AnimecsLOD
 
 LOD state containing current level, update frequency, frame offset, and distance to camera.
@@ -58,10 +65,6 @@ LOD state containing current level, update frequency, frame offset, and distance
 ### AnimecsLODConfig
 
 Global LOD configuration with distance thresholds, update frequencies, and temporal distribution settings. Singleton component.
-
-### AnimecsCameraTag
-
-Identifies main camera for LOD distance calculations.
 
 ## Blend Shape Components
 
@@ -99,6 +102,10 @@ Buffer element for fired animation events. Contains event name, state index, fra
 
 ### AnimecsDebugger
 
-Debug visualization settings including display mode, color override, and gizmo scale. Enableable component.
+Debug visualization settings including display mode and color override. Enableable component.
+
+**Fields:**
+- `DebugMode` - Flags for what to display (States, All)
+- `DebugColor` - Custom color override. If alpha is zero, uses automatic LOD colors: High (Green), Medium (Yellow), Low (Red), Off (Gray), Transitioning (Blue), Paused (Orange)
 
 ---

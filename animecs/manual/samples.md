@@ -17,9 +17,9 @@ The sample imports to `Assets/Samples/Animecs/1.0.0/Basic/`.
 The sample contains a single scene with 8 demonstration booths arranged in a circle. Each booth showcases a different Animecs feature:
 
 ### Booth 1: Basic Playback
-Plays a blend tree state continuously. Character moves using a 1D blend tree (Idle → Walk → Run) controlled by a Speed parameter.
+Plays a single animation state continuously or uses a 1D blend tree (Idle → Walk → Run) controlled by a Speed parameter.
 
-**Demonstrates:** Blend tree evaluation, parameter-driven animation
+**Demonstrates:** Single state playback, blend tree evaluation, parameter-driven animation
 
 ### Booth 2: Blended Transitions
 Cycles through states with smooth transitions: Idle → Walk → Run → Idle. Transitions use 0.3s blend duration.

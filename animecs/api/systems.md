@@ -10,15 +10,21 @@ Updates in `SimulationSystemGroup` (order last). Contains all Animecs animation 
 
 ## Core Systems
 
+### AnimecsCameraSystem
+
+Updates camera position and view-projection matrix from `AnimecsCameraManaged` or Camera.main. Runs before `AnimecsLODSystem`.
+
+**Requires:** `AnimecsCameraManaged` managed component (optional, falls back to Camera.main)
+
 ### AnimecsLODSystem
 
-Calculates distance from entities to camera and assigns LOD levels based on configured thresholds. Sets update frequency per entity.
+Calculates distance from entities to camera and assigns LOD levels based on configured thresholds. Performs frustum culling to set Off state for out-of-view entities.
 
-**Requires:** `AnimecsCameraTag` component on camera entity
+**Requires:** `AnimecsLODConfig` singleton (created automatically)
 
 ### AnimecsSkinInitializationSystem
 
-Links renderer entities to their state machine root. Runs once per entity during initialization.
+Links renderer entities to their state machine root. Runs once per entity during initialization. Runs once in `AnimecsInitializationSystemGroup`.
 
 ### AnimecsStateProgressionSystem
 
@@ -48,7 +54,7 @@ Applies blend shape weights from baked animation data or runtime overrides. Writ
 
 ### AnimecsLODConfigInitSystem
 
-Creates LOD configuration singleton at initialization. Waits for camera tag before creating config.
+Creates LOD configuration singleton at initialization with default values. Runs once in `AnimecsInitializationSystemGroup`.
 
 ### AnimecsDebugVisualizationSystem
 
@@ -58,13 +64,14 @@ Collects debug information for runtime visualization overlay.
 
 Systems execute in this sequence each frame:
 
-1. **AnimecsLODSystem** - Distance calculation, LOD assignment
-2. **AnimecsSkinInitializationSystem** - Parent linking
-3. **AnimecsStateProgressionSystem** - Time advancement
-4. **AnimecsStateTransitionSystem** - Transition evaluation
-5. **AnimecsBlendTreeSystem** - Weight calculation
-6. **AnimecsEventSystem** - Event detection
-7. **AnimecsSkinDeformationSystem** - Matrix sampling
-8. **AnimecsBlendShapeSystem** - Weight application
+1. **AnimecsCameraSystem** - Camera data update
+2. **AnimecsLODSystem** - Distance calculation, frustum culling, LOD assignment
+3. **AnimecsSkinInitializationSystem** - Parent linking
+4. **AnimecsStateProgressionSystem** - Time advancement
+5. **AnimecsStateTransitionSystem** - Transition evaluation
+6. **AnimecsBlendTreeSystem** - Weight calculation
+7. **AnimecsEventSystem** - Event detection
+8. **AnimecsSkinDeformationSystem** - Matrix sampling
+9. **AnimecsBlendShapeSystem** - Weight application
 
 ---

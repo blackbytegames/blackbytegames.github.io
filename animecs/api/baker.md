@@ -99,19 +99,19 @@ weights[0] = new AnimecsBlendShapeWeight { Weight = 1.0f };
 Adds debug overlay showing animation state. Optional component.
 
 **Inspector Fields:**
-- `ShowStates` - Display state information
-- `CustomColor` - Color override for overlay
-- `GizmoScale` - Scale multiplier for display
+- `DebugMode` - Display flags (None, States, All)
+- `DebugColor` - Custom color override (zero alpha uses LOD color)
 
 **Created During Baking:**
 - `AnimecsDebugger` - Debug visualization settings
 
 **Overlay Shows:**
 - Current state name
+- Target state name (during transitions)
 - Animation time
-- LOD level
+- LOD level (color-coded: green=High, yellow=Medium, red=Low, gray=Off, blue=Transitioning, orange=Paused)
 - Transition progress
-- Active blend tree motions
+- Active blend tree motion count
 
 ## Baking Process
 
