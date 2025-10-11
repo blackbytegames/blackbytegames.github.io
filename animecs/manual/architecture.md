@@ -67,16 +67,28 @@ Runtime entities follow a parent-child structure matching the authoring prefab.
 
 ## Systems
 
-All systems execute in `AnimecsSystemGroup` (late in `SimulationSystemGroup`).
+Animecs uses two system groups:
+
+- **AnimecsInitializationSystemGroup** executes in `InitializationSystemGroup` for one-time setup
+- **AnimecsSystemGroup** executes late in `SimulationSystemGroup` for per-frame animation updates
 
 ![System Order](../assets/diagrams/system-order.svg)
 
 ### Execution Order
 
+#### AnimecsInitializationSystemGroup
+
 | System | Purpose |
 |--------|---------|
+| **AnimecsLODConfigInitSystem** | Creates LOD configuration singleton with default values |
+| **AnimecsSkinInitializationSystem** | Links renderer entities to state machine roots |
+
+#### AnimecsSystemGroup
+
+| System | Purpose |
+|--------|---------|
+| **AnimecsCameraSystem** | Updates camera position and view-projection matrix |
 | **AnimecsLODSystem** | Calculates distance to camera, sets LOD level and update frequency |
-| **AnimecsSkinInitializationSystem** | Links renderer entities to state machine roots (runs once per entity) |
 | **AnimecsStateProgressionSystem** | Advances animation time based on deltaTime and state speed |
 | **AnimecsStateTransitionSystem** | Evaluates transition conditions, initiates state changes |
 | **AnimecsBlendTreeSystem** | Calculates motion weights for blend trees |
