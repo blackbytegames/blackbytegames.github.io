@@ -50,7 +50,9 @@ In your character's import settings:
 Animecs needs access to all bone GameObjects during baking. Optimized hierarchies hide this data.
 
 **Animation Type can be anything**  
-Generic, Humanoid, Legacy—doesn't matter. Animecs reads the Animator Controller, not the Avatar.
+- Can be Generic, Humanoid, or Legacy—Animecs reads the Animator Controller, not the Avatar
+- Ensure animation clips match your rig type (Generic clips for Generic rigs, Humanoid for Humanoid rigs)
+- Verify clips play correctly in Unity's Animation window before baking
 
 ## Bake Your Character
 
@@ -120,7 +122,7 @@ This appears as an overlay above each character. Useful for debugging state tran
 
 **Animecs trades flexibility for performance.** Everything is baked into blob assets at authoring time. This means:
 
-✅ **Fast runtime** - No reflection, no string lookups, pure data  
+✅ **Fast runtime** - No reflection, no managed allocations, unmanaged data  
 ❌ **No runtime editing** - Can't add states or change transitions after baking
 
 **Best practice:**  

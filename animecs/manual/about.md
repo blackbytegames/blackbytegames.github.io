@@ -31,7 +31,7 @@ Animecs reads your Animator Controller and converts everything to DOTS:
 - **Parameters** → Float, int, bool, trigger support
 - **Animation events** → Frame-accurate event detection
 - **Blend shapes** → Pre-baked or runtime override
-- **LOD** → Automatic distance-based update frequency
+- **LOD** → Automatic distance-based update frequency + Frustum culling
 
 Your workflow stays the same. Animator Controller, animation clips, blend trees—all converted during baking. At runtime, Animecs uses pure ECS jobs and compute shaders to handle everything.
 
@@ -52,6 +52,8 @@ Your workflow stays the same. Animator Controller, animation clips, blend trees�
 **Compute Shader Skinning** - Vertices are transformed on the GPU via compute shaders. The CPU just updates bone transforms and dispatches compute jobs. No per-vertex CPU work, no mesh copies per instance. Thousands of characters without CPU bottlenecks.
 
 **LOD With Temporal Distribution** - Distant characters update at 1/8th frequency. Updates are distributed across frames using deterministic offsets. No frame spikes when 200 characters need simultaneous updates. Consistent frame times even with massive crowds.
+
+**Frustum Culling** - Only characters in view are updated. No unnecessary work.
 
 **Blob Assets for Everything** - State machines, transitions, clips, blend trees—all stored in blob assets. Fast access, safe for jobs, zero garbage collection. No allocations, no cache misses, pure data-oriented performance.
 

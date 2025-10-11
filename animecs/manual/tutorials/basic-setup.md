@@ -37,7 +37,7 @@ partial struct ProcessInputJob : IJobEntity
         if (input.JumpPressed)
         {
             // Transition to Jump state over 0.1 seconds
-            AnimecsController.Play(ECB, index, entity, "Jump", 
+            AnimecsController.Play(ref ECB, index, in entity, "Jump", 
                 transitionDuration: 0.1f,
                 curveType: AnimecsCurveType.EaseOut,
                 overrideExitTime: true,
@@ -61,7 +61,7 @@ void Execute([EntityIndexInQuery] int index, Entity entity, in MovementData move
 {
     if (movement.Speed > 5f)
     {
-        AnimecsController.Play(ECB, index, entity, RunIndex, 
+        AnimecsController.Play(ref ECB, index, in entity, RunIndex, 
             transitionDuration: 0.3f);
     }
 }
@@ -87,36 +87,61 @@ Parameters drive transitions. Set them based on gameplay logic.
 
 ### Float Parameters
 
+**Main Thread:**
 ```csharp
 var entityManager = state.EntityManager;
 int speedHash = Animator.StringToHash("Speed");
 
 AnimecsController.SetFloat(entityManager, entity, speedHash, 4.5f);
 ```
+**Burst Job:**
+```csharp
+// In system OnCreate/OnUpdate
+_floatLookup = state.GetBufferLookup<AnimecsFloatParameter>();
+_parametersLookup = state.GetComponentLookup<AnimecsParameters>(true);
+
+// In job Execute
+ref var paramBlob = ref _parametersLookup[entity].ParameterBlob.Value;
+int speedHash = Animator.StringToHash("Speed");
+AnimecsController.SetFloat(ref _floatLookup, ref paramBlob, in entity, speedHash, 4.5f);
+```
 
 ### Int Parameters
-
+**Main Thread:**
 ```csharp
 int weaponTypeHash = Animator.StringToHash("WeaponType");
 AnimecsController.SetInt(entityManager, entity, weaponTypeHash, 2);
 ```
-
+**Burst Job:**
+```csharp
+ref var paramBlob = ref _parametersLookup[entity].ParameterBlob.Value;
+AnimecsController.SetInt(ref _intLookup, ref paramBlob, in entity, weaponTypeHash, 2);
+```
 ### Bool Parameters
-
+**Main Thread:**
 ```csharp
 int groundedHash = Animator.StringToHash("Grounded");
 AnimecsController.SetBool(entityManager, entity, groundedHash, true);
 ```
-
+**Burst Job:**
+```csharp
+ref var paramBlob = ref _parametersLookup[entity].ParameterBlob.Value;
+AnimecsController.SetBool(ref _boolLookup, ref paramBlob, in entity, groundedHash, true);
+```
 ### Trigger Parameters
 
 Triggers fire once, then reset automatically:
 
+**Main Thread:**
 ```csharp
 int attackHash = Animator.StringToHash("Attack");
 AnimecsController.SetTrigger(entityManager, entity, attackHash);
 ```
-
+**Burst Job:**
+```csharp
+ref var paramBlob = ref _parametersLookup[entity].ParameterBlob.Value;
+AnimecsController.SetTrigger(ref _triggerLookup, ref paramBlob, in entity, attackHash);
+```
 ## Reading Animation State
 
 Query current animation data to sync gameplay with animation.
@@ -168,49 +193,6 @@ AnimecsController.SetStatePaused(ref stateData, paused: false);
 entityManager.SetComponentData(entity, stateData);
 ```
 
-## Complete Example: Movement Controller
-
-```csharp
-[BurstCompile]
-public partial struct CharacterAnimationSystem : ISystem
-{
-    public void OnUpdate(ref SystemState state)
-    {
-        var ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
-            .CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
-
-        var job = new UpdateAnimationJob { ECB = ecb };
-        job.ScheduleParallel();
-    }
-}
-
-[BurstCompile]
-partial struct UpdateAnimationJob : IJobEntity
-{
-    public EntityCommandBuffer.ParallelWriter ECB;
-
-    void Execute([EntityIndexInQuery] int index, Entity entity, 
-                in CharacterInput input, in CharacterVelocity velocity)
-    {
-        float speed = math.length(velocity.Value);
-        int speedHash = Animator.StringToHash("Speed");
-        
-        // Update parameter (this drives automatic transitions)
-        var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        AnimecsController.SetFloat(entityManager, entity, speedHash, speed);
-
-        // Manual transition on jump
-        if (input.JumpPressed)
-        {
-            AnimecsController.Play(ECB, index, entity, "Jump",
-                transitionDuration: 0.15f,
-                curveType: AnimecsCurveType.EaseOut,
-                overrideExitTime: true);
-        }
-    }
-}
-```
-
 ## Best Practices
 
 **Cache parameter hashes** - Calculate once, reuse:
@@ -224,7 +206,7 @@ const int IdleStateIndex = 0;
 AnimecsController.Play(ECB, index, entity, IdleStateIndex, 0.2f);
 ```
 
-**Set parameters every frame** - Animecs evaluates transitions continuously. Don't worry about "spamming" parameter updates.
+**Set (float/int) parameters every frame** - Animecs evaluates transitions continuously. Don't worry about "spamming" parameter updates.
 
 **Transition durations matter** - 0.1-0.3s for responsive movement, 0.5-1.0s for dramatic changes.
 
