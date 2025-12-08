@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaneGraph Documentation</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.7;
+            color: #222;
+            background: white;
+            padding-top: 50px;
+        }
+
+        .unity-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: #1a1a1a;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .unity-logo {
+            display: flex;
+            align-items: center;
+            margin-right: 32px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .unity-logo img {
+            height: 32px;
+            width: auto;
+            transition: opacity 0.2s;
+        }
+
+        .unity-logo:hover img {
+            opacity: 0.85;
+        }
+
+        .unity-nav {
+            display: flex;
+            gap: 24px;
+        }
+
+        .unity-nav a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 15px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .unity-nav a:hover,
+        .unity-nav a.active {
+            color: white;
+            border-bottom-color: white;
+        }
+
+        .unity-search {
+            margin-left: auto;
+            position: relative;
+        }
+
+        .unity-search input {
+            width: 280px;
+            padding: 8px 36px 8px 14px;
+            border: 1px solid #404040;
+            border-radius: 4px;
+            background: #2a2a2a;
+            color: white;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .unity-search input::placeholder {
+            color: #888;
+        }
+
+        .unity-search input:focus {
+            background: #333;
+            border-color: #555;
+        }
+
+        .unity-breadcrumb {
+            background: #f7f7f7;
+            padding: 12px 24px;
+            font-size: 13px;
+            color: #666;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .unity-breadcrumb a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        .unity-breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .unity-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr 240px;
+            height: calc(100vh - 92px);
+        }
+
+        .unity-sidebar-left {
+            background: #fafafa;
+            border-right: 1px solid #e8e8e8;
+            overflow-y: auto;
+        }
+
+        .sidebar-filter {
+            padding: 16px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .sidebar-filter input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .sidebar-filter input:focus {
+            border-color: #0066cc;
+        }
+
+        .sidebar-nav {
+            padding: 12px 0;
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-nav li {
+            margin: 0;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 10px 20px;
+            color: #333;
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-nav a:hover {
+            background: rgba(0,102,204,0.06);
+            color: #0066cc;
+        }
+
+        .sidebar-nav a.active {
+            background: rgba(0,102,204,0.06);
+            border-left-color: #0066cc;
+            color: #0066cc;
+            font-weight: 500;
+        }
+
+        .sidebar-nav ul ul {
+            padding-left: 0;
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .sidebar-nav ul ul.collapsed {
+            max-height: 0;
+        }
+
+        .sidebar-nav ul ul a {
+            padding-left: 40px;
+            font-size: 13px;
+        }
+
+        .nav-parent {
+            position: relative;
+        }
+
+        .nav-parent > a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-right: 12px;
+        }
+
+        .nav-parent-toggle {
+            font-size: 10px;
+            color: #999;
+            transition: transform 0.2s;
+            cursor: pointer;
+            padding: 6px;
+        }
+
+        .nav-parent-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .unity-content {
+            background: white;
+            overflow-y: auto;
+            padding: 40px 60px 100px 60px;
+        }
+
+        .unity-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 24px 0;
+            display: block;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+        }
+
+        .unity-content h1 {
+            font-size: 36px;
+            font-weight: 300;
+            margin: 0 0 24px 0;
+            color: #222;
+            letter-spacing: -0.5px;
+        }
+
+        .unity-content h2 {
+            font-size: 26px;
+            font-weight: 400;
+            margin: 48px 0 20px 0;
+            color: #222;
+            padding-top: 24px;
+            border-top: 1px solid #e8e8e8;
+            letter-spacing: -0.3px;
+        }
+
+        .unity-content h3 {
+            font-size: 20px;
+            font-weight: 500;
+            margin: 32px 0 16px 0;
+            color: #222;
+        }
+
+        .unity-content h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 24px 0 12px 0;
+            color: #222;
+        }
+
+        .unity-content p {
+            margin: 14px 0;
+            line-height: 1.75;
+            color: #333;
+        }
+
+        .unity-content a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        .unity-content a:hover {
+            text-decoration: underline;
+        }
+
+        .unity-content ul,
+        .unity-content ol {
+            margin: 16px 0;
+            padding-left: 28px;
+        }
+
+        .unity-content li {
+            margin: 6px 0;
+            line-height: 1.7;
+        }
+
+        .unity-content strong {
+            font-weight: 600;
+            color: #222;
+        }
+
+        .unity-content pre {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 3px;
+            padding: 16px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .unity-content code {
+            background: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 13px;
+            font-family: Monaco, Menlo, Consolas, monospace;
+            color: #c7254e;
+        }
+
+        .unity-content pre code {
+            background: transparent;
+            padding: 0;
+            color: #333;
+            border: none;
+        }
+
+        .unity-content blockquote {
+            border-left: 3px solid #4a9eff;
+            background: #e7f3ff;
+            padding: 12px 16px;
+            margin: 20px 0;
+            border-radius: 0 3px 3px 0;
+        }
+
+        .unity-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 13px;
+        }
+
+        .unity-content table th {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .unity-content table td {
+            border: 1px solid #e0e0e0;
+            padding: 10px 14px;
+        }
+
+        .unity-sidebar-right {
+            background: #fafafa;
+            border-left: 1px solid #e8e8e8;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .sidebar-right-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #999;
+            margin-bottom: 12px;
+        }
+
+        .sidebar-toc {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-toc li {
+            margin: 0;
+        }
+
+        .sidebar-toc a {
+            display: block;
+            padding: 6px 0;
+            color: #555;
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.2s;
+        }
+
+        .sidebar-toc a:hover {
+            color: #0066cc;
+        }
+
+        .sidebar-toc a.active {
+            color: #0066cc;
+            font-weight: 500;
+        }
+
+        .sidebar-toc ul {
+            list-style: none;
+            padding-left: 12px;
+            margin-top: 4px;
+        }
+
+        .sidebar-toc ul a {
+            font-size: 12px;
+        }
+
+        .unity-sidebar-left::-webkit-scrollbar,
+        .unity-content::-webkit-scrollbar,
+        .unity-sidebar-right::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .unity-sidebar-left::-webkit-scrollbar-thumb,
+        .unity-content::-webkit-scrollbar-thumb,
+        .unity-sidebar-right::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 1400px) {
+            .unity-layout {
+                grid-template-columns: 260px 1fr 220px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .unity-layout {
+                grid-template-columns: 260px 1fr;
+            }
+            .unity-sidebar-right {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .unity-layout {
+                grid-template-columns: 1fr;
+            }
+            .unity-sidebar-left {
+                position: absolute;
+                left: -280px;
+                transition: left 0.3s;
+            }
+            .unity-content {
+                padding: 20px;
+            }
+            .unity-search input {
+                width: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="unity-header">
+    <a href="/" class="unity-logo">
+        <img src="../assets/logo.png" alt="Blackbyte">
+    </a>
+    <nav class="unity-nav">
+        <a href="#" data-section="manual" class="nav-tab active">Manual</a>
+        <a href="#" data-section="api" class="nav-tab">Scripting API</a>
+        <a href="#" data-section="changelog" class="nav-tab">Changelog</a>
+    </nav>
+    <div class="unity-search">
+        <input type="search" placeholder="Search" id="searchInput">
+    </div>
+</div>
+
+<div class="unity-breadcrumb">
+    <a href="#" id="breadcrumbSection">Manual</a>
+    <span>/</span>
+    <span id="breadcrumbCurrent">Animecs</span>
+</div>
+
+<div class="unity-layout">
+    <div class="unity-sidebar-left">
+        <div class="sidebar-filter">
+            <input type="text" placeholder="Enter here to filter..." id="filterInput">
+        </div>
+        <nav class="sidebar-nav" id="leftNav"></nav>
+    </div>
+
+    <div class="unity-content" id="mainContent"></div>
+
+    <div class="unity-sidebar-right">
+        <div class="sidebar-right-title">IN THIS ARTICLE</div>
+        <ul class="sidebar-toc" id="tocList"></ul>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+    let currentSection = 'manual';
+
+    const navigation = {
+        manual: [
+            { title: 'About Animecs', url: 'manual/about.md' },
+            { title: 'Getting Started', url: 'manual/getting-started.md' },
+            { title: 'Architecture', url: 'manual/architecture.md' },
+            {
+                title: 'Tutorials',
+                submenu: [
+                    { title: 'Basic Setup', url: 'manual/tutorials/basic-setup.md' },
+                    { title: 'State Machines', url: 'manual/tutorials/state-machines.md' },
+                    { title: 'Blend Trees', url: 'manual/tutorials/blend-trees.md' },
+                    { title: 'LOD System', url: 'manual/tutorials/lod-system.md' },
+                    { title: 'Blend Shapes', url: 'manual/tutorials/blend-shapes.md' }
+                ]
+            },
+            { title: 'Samples', url: 'manual/samples.md' },
+            { title: 'Limitations', url: 'manual/limitations.md' }
+        ],
+        api: [
+            { title: 'API Overview', url: 'api/README.md' },
+            { title: 'AnimecsController', url: 'api/controller.md' },
+            { title: 'Components', url: 'api/components.md' },
+            { title: 'Systems', url: 'api/systems.md' },
+            { title: 'Data Structures', url: 'api/data-structures.md' },
+            { title: 'Bakers', url: 'api/baker.md' }
+        ]
+    };
+
+    function buildNavigation(section = 'manual') {
+        const nav = document.getElementById('leftNav');
+        const items = navigation[section];
+        let html = '<ul>';
+
+        items.forEach((item, index) => {
+            if (item.submenu) {
+                html += `
+                    <li class="nav-parent">
+                        <a href="#" onclick="toggleSubmenu(${index}); return false;">
+                            <span>${item.title}</span>
+                            <span class="nav-parent-toggle" id="toggle-${index}">▼</span>
+                        </a>
+                        <ul id="submenu-${index}">`;
+                item.submenu.forEach(sub => {
+                    html += `<li><a href="#${sub.url}">${sub.title}</a></li>`;
+                });
+                html += `</ul></li>`;
+            } else {
+                html += `<li><a href="#${item.url}">${item.title}</a></li>`;
+            }
+        });
+
+        html += '</ul>';
+        nav.innerHTML = html;
+    }
+
+    function toggleSubmenu(index) {
+        const submenu = document.getElementById(`submenu-${index}`);
+        const toggle = document.getElementById(`toggle-${index}`);
+
+        if (submenu.classList.contains('collapsed')) {
+            submenu.classList.remove('collapsed');
+            toggle.classList.remove('collapsed');
+        } else {
+            submenu.classList.add('collapsed');
+            toggle.classList.add('collapsed');
+        }
+    }
+
+    function resolveImagePaths(html, currentFilePath) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const images = doc.querySelectorAll('img');
+
+        images.forEach(img => {
+            let src = img.getAttribute('src');
+
+            if (!src || src.startsWith('http') || src.startsWith('data:')) {
+                return;
+            }
+
+            const currentDir = currentFilePath.substring(0, currentFilePath.lastIndexOf('/') + 1);
+            const resolvedPath = resolvePath(currentDir, src);
+            img.setAttribute('src', resolvedPath);
+        });
+
+        return doc.body.innerHTML;
+    }
+
+    function resolvePath(basePath, relativePath) {
+        const parts = basePath.split('/').filter(p => p);
+        const relParts = relativePath.split('/');
+
+        for (const part of relParts) {
+            if (part === '..') {
+                parts.pop();
+            } else if (part !== '.' && part !== '') {
+                parts.push(part);
+            }
+        }
+
+        return parts.join('/');
+    }
+
+    async function loadContent(file = 'manual/about.md') {
+        try {
+            const response = await fetch(file);
+            const text = await response.text();
+            let html = marked.parse(text);
+
+            html = resolveImagePaths(html, file);
+
+            document.getElementById('mainContent').innerHTML = html;
+
+            const parts = file.split('/');
+            const fileName = parts[parts.length - 1].replace('.md', '').replace(/-/g, ' ');
+            const title = fileName.charAt(0).toUpperCase() + fileName.slice(1);
+            document.getElementById('breadcrumbCurrent').textContent = title;
+
+            generateTOC();
+            highlightActiveNav(file);
+            document.querySelector('.unity-content').scrollTop = 0;
+
+            setTimeout(setupMarkdownLinks, 0);
+        } catch (error) {
+            document.getElementById('mainContent').innerHTML =
+                `<h1>Error</h1><p>Could not load ${file}. Make sure the file exists.</p>`;
+        }
+    }
+
+    function setupMarkdownLinks() {
+        const content = document.getElementById('mainContent');
+
+        content.querySelectorAll('a').forEach(link => {
+            let href = link.getAttribute('href');
+
+            if (!href || href.startsWith('http') || href.startsWith('mailto:')) {
+                return;
+            }
+
+            if (href.startsWith('#')) {
+                href = href.substring(1);
+            }
+
+            if (href.endsWith('.md')) {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+
+                    let currentPath = window.location.hash.substring(1) || 'manual/about.md';
+                    let currentDir = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+
+                    let parts = currentDir.split('/').filter(p => p);
+                    let hrefParts = href.split('/');
+
+                    for (let part of hrefParts) {
+                        if (part === '..') {
+                            parts.pop();
+                        } else if (part !== '.' && part !== '') {
+                            parts.push(part);
+                        }
+                    }
+
+                    let finalPath = parts.join('/');
+
+                    window.location.hash = finalPath;
+                    loadContent(finalPath);
+                });
+            }
+        });
+    }
+
+    function generateTOC() {
+        const content = document.getElementById('mainContent');
+        const headings = content.querySelectorAll('h2, h3');
+        const tocList = document.getElementById('tocList');
+
+        if (headings.length === 0) {
+            tocList.innerHTML = '<li style="color: #999; font-size: 12px;">No headings found</li>';
+            return;
+        }
+
+        let html = '';
+        let currentH2 = null;
+
+        headings.forEach(heading => {
+            const id = heading.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            heading.id = id;
+
+            if (heading.tagName === 'H2') {
+                if (currentH2) {
+                    html += '</ul></li>';
+                }
+                html += `<li><a href="#${id}">${heading.textContent}</a><ul>`;
+                currentH2 = true;
+            } else if (heading.tagName === 'H3') {
+                html += `<li><a href="#${id}">${heading.textContent}</a></li>`;
+            }
+        });
+
+        if (currentH2) {
+            html += '</ul></li>';
+        }
+
+        tocList.innerHTML = html;
+
+        tocList.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.getElementById(link.getAttribute('href').substring(1));
+                if (target) {
+                    document.querySelector('.unity-content').scrollTo({
+                        top: target.offsetTop - 20,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    }
+
+    function highlightActiveNav(currentFile) {
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${currentFile}`) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            e.preventDefault();
+            const section = tab.dataset.section;
+
+            if (section === 'changelog') {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById('breadcrumbSection').textContent = 'Resources';
+                document.getElementById('breadcrumbCurrent').textContent = 'Changelog';
+                document.getElementById('leftNav').innerHTML = '';
+                window.location.hash = 'changelog.md';
+                loadContent('changelog.md');
+                return;
+            }
+
+            if (!section) return;
+
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            document.getElementById('breadcrumbSection').textContent =
+                section === 'manual' ? 'Manual' : 'Scripting API';
+
+            currentSection = section;
+            buildNavigation(section);
+
+            const firstItem = navigation[section][0];
+            window.location.hash = firstItem.url;
+            loadContent(firstItem.url);
+        });
+    });
+
+    window.addEventListener('hashchange', () => {
+        const hash = window.location.hash.substring(1);
+        if (hash && hash !== '') {
+            loadContent(hash);
+        }
+    });
+
+    document.getElementById('filterInput').addEventListener('input', (e) => {
+        const filter = e.target.value.toLowerCase();
+        document.querySelectorAll('.sidebar-nav li').forEach(item => {
+            const link = item.querySelector('a');
+            if (link) {
+                const text = link.textContent.toLowerCase();
+                const parent = item.closest('ul');
+
+                if (text.includes(filter)) {
+                    item.style.display = 'block';
+                    if (parent && parent.id && parent.id.startsWith('submenu-')) {
+                        parent.classList.remove('collapsed');
+                        const toggleId = parent.id.replace('submenu-', 'toggle-');
+                        const toggle = document.getElementById(toggleId);
+                        if (toggle) toggle.classList.remove('collapsed');
+                    }
+                } else {
+                    item.style.display = 'none';
+                }
+            }
+        });
+    });
+
+    buildNavigation('manual');
+    const initialFile = window.location.hash.substring(1) || 'manual/about.md';
+    loadContent(initialFile);
+</script>
+</body>
+</html>
