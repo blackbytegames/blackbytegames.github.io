@@ -15,6 +15,8 @@ All notable changes to LaneGraph will be documented in this file.
 ### New Features
 - **LOD system for gizmo drawing**  
   Added distance-based and view-based culling for editor gizmos, providing up to 85–95% reduction in gizmo rendering overhead for large scenes.
+- **Depth-aware gizmo rendering (ZTest)**  
+  Added a ZTest option to lane gizmo drawing so lane boundaries correctly appear behind occluding scene geometry, improving visual clarity when working in dense environments.
 
 ### Performance Improvements
 - **Optimized gizmo rendering**  

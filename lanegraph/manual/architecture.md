@@ -1,358 +1,300 @@
-# LaneGraph Architecture
+# Core Concepts
 
-This document explains the technical architecture of LaneGraph, helping you understand how the system works under the hood.
+Understanding LaneGraph's architecture helps you build efficient lane networks and integrate them with your game systems.
 
-## System Overview
-
-LaneGraph is built on three main pillars:
-
-1. **Editor Tools**: For designing lane networks visually
-2. **Data Management**: For storing and organizing lane information
-3. **Runtime Query System**: For fast spatial queries and pathfinding
-
-## Component Architecture
-
-### Hierarchy Structure
+## System Architecture
 
 ```
-ILaneComponent (Interface)
-    │
-    ├── PathComponent
-    │   - Simple paths with multiple lanes
-    │   - Shape types: Linear, AutoBezier, Bezier
-    │   - Node-based editing
-    │
-    ├── IntersectionComponent
-    │   - Multi-node junctions
-    │   - Per-node lane profiles
-    │   - Configurable lane connections
-    │
-    └── LaneTransitionComponent
-        - Merge/Split transitions
-        - Gradual lane count changes
-        - Smooth blending
-```
-
-### Core Data Structures
-
-```csharp
-// Lane - Represents a single lane
-struct Lane
-{
-    int LaneIndex;                    // Global index
-    LaneConfiguration Configuration;   // Width, direction, tags, etc.
-    float3[] LanePoints;              // Path geometry
-    LaneState CurrentLaneState;       // Runtime state
-    LaneLinker[] LaneLinkers;         // Connections
-    bool IsIntersectionLane;          // Special handling flag
-}
-
-// LaneConfiguration - Lane properties
-struct LaneConfiguration
-{
-    float Width;                      // Lane width
-    LaneDirection Direction;          // Forward/Backward
-    LaneTags Tags;                    // Custom categories
-    float Speed;                      // Speed limit
-    LaneState DefaultState;           // Initial state
-}
-
-// LaneComponentData - Component metadata
-struct LaneComponentData
-{
-    int ComponentId;                  // Unique identifier
-    int[] LanesIndex;                 // Indices of lanes in this component
-    float3[] BoundaryPoints;          // AABB boundary
-}
+Editor Time                  Build Time                    Runtime
+┌──────────────┐            ┌──────────────┐             ┌──────────────┐
+│ Components   │            │ Graph        │             │ Manager      │
+│ - Path       │───build───>│ Builder      │───creates──>│ - Initialize │
+│ - Intersection           │              │             │ - Query      │
+│ - Transition │            │              │             │ - Control    │
+└──────────────┘            └──────────────┘             └──────────────┘
+       │                                                         │
+       ↓                                                         ↓
+┌──────────────┐                                         ┌──────────────┐
+│ Lane Profiles│                                         │ BVH System   │
+│ (Project     │                                         │ (Spatial     │
+│  Settings)   │                                         │  Queries)    │
+└──────────────┘                                         └──────────────┘
 ```
 
 ## Data Flow
 
-### Editor Time
+### 1. Editor Time
+Create and configure components using visual tools. Each component references a Lane Profile and generates preview lanes in real-time.
 
-1. **User creates/modifies components** in Scene view
-2. **Components generate lanes** based on profiles
-3. **Visual feedback** via gizmos and handles
-4. **Validation** checks for errors
+### 2. Build Time
+The Graph Builder scans all scenes, collects component data, and generates optimized runtime structures:
+- Flattened lane array
+- Component metadata
+- Scene index mapping
+- Spatial acceleration structure
 
-### Build Time
+### 3. Runtime
+The Manager initializes the current scene's data and provides query APIs. The BVH system accelerates spatial searches.
 
-1. **LaneGraphBuilder** scans all scenes in build settings
-2. **Collects all lane components** and their data
-3. **Generates optimized data structures**:
-   - Centralized lane array
-   - Component metadata array
-   - Scene index mapping
-4. **Creates LaneGraphRegistry** asset
-5. **Builds BVH spatial index**
+## Component Types
 
-### Runtime
+### PathComponent
+Represents a path with parallel lanes. Supports three shape types:
 
-1. **Initialize** loads registry for current scene
-2. **BVH construction** for fast queries
-3. **Query operations** use BVH traversal
-4. **State changes** update lane array directly
-
-## Spatial Query System
-
-### BVH Structure
-
-LaneGraph uses a two-level Bounding Volume Hierarchy:
-
+**Linear** - Straight segments between nodes
 ```
-Level 1: Component BVH
-    - Groups components spatially
-    - Broad-phase filtering
-    - Quick rejection of distant areas
-
-Level 2: Lane Queries
-    - Within matching components
-    - Fine-grained distance calculations
-    - Direction and tag filtering
+Node ●──────●──────● Node
+Lane ────────────────
+Lane ────────────────
 ```
 
-### Query Algorithm
-
+**AutoBezier** - Automatically smoothed curves
 ```
-FindClosestLane(position, maxDistance, direction, tags):
-    1. Query component BVH for candidates
-    2. For each candidate component:
-        a. Check AABB distance
-        b. If within range, check each lane
-        c. Calculate point-to-lane distance
-        d. Apply direction filter if needed
-        e. Apply tag filter if needed
-    3. Return closest matching lane
+Node ●╭───╮●╭───╮● Node
+Lane ─╯   ╰─╯   ╰─
+Lane ─╯   ╰─╯   ╰─
 ```
 
-### Performance Characteristics
-
-- **Component BVH Construction**: O(n log n)
-- **Component Query**: O(log n)
-- **Lane Distance Calculation**: O(m) where m = points per lane
-- **Overall Query**: O(log n + k·m) where k = candidate components
-
-## Lane State Management
-
-### State Controller System
-
+**Bezier** - Manual tangent control for precise curves
 ```
-LaneStateController
-    │
-    ├── SignalGroup 1
-    │   ├── Lane Indices
-    │   ├── Timing Configuration
-    │   └── Current State
-    │
-    ├── SignalGroup 2
-    └── SignalGroup N
+Node ●╮    ╭●╮    ╭● Node
+     ╱│╲  ╱ │╲  ╱
+Lane╯ │ ╲╯  │ ╲╯
+Lane╯ │ ╲╯  │ ╲╯
 ```
 
-### State Transitions
+### IntersectionComponent
+Multi-way junction with per-node profiles and configurable lane connections. Each node can have different lane counts and configurations.
 
+**Key features:**
+- 3+ node points forming the junction
+- Per-node lane profiles
+- Explicit lane-to-lane connections
+- Automatic curve generation between nodes
+
+### LaneTransitionComponent
+Handles lane count changes through merges and splits.
+
+**Merge** - Multiple lanes combine into fewer
 ```
-Green (Open)
-    ↓ (yellow duration)
-Yellow (AboutToClose)
-    ↓ (automatic)
-Red (Closed)
-    ↓ (green duration)
-Back to Green
+Lane ─╮
+Lane ─┤──> Merged Lane
+Lane ─╯
 ```
 
-### Event System
+**Split** - Lane divides into multiple
+```
+              ╭─ Lane
+Merged Lane ──┼─ Lane
+              ╰─ Lane
+```
+
+## Lane Profiles
+
+Lane Profiles are templates defining lane structure:
 
 ```csharp
-// Register for state change notifications
-LaneGraphManager.OnLaneStateChanged += (laneIndex, newState) =>
+LaneConfiguration
 {
-    // React to state changes
-    Debug.Log($"Lane {laneIndex} is now {newState}");
-};
-```
-
-## Memory Management
-
-### Storage Layout
-
-```
-LaneGraphManager (Static)
-    - Lane[] Lanes
-    - LaneComponentData[] ComponentData
-    - int CurrentSceneIndex
-
-LaneGraphRegistry (ScriptableObject)
-    - SceneData[] PerSceneData
-    - Global configuration
-
-BVHSystem (Static)
-    - BVHNode tree structure
-    - ComponentBVHData[] array
-    - float3[] lane directions cache
-```
-
-### Memory Optimization Strategies
-
-1. **Struct-based design** - No heap allocations for core types
-2. **Array pooling** - Reuse temporary arrays in queries
-3. **Stackalloc** - Use stack memory for small temporary buffers
-4. **Lazy BVH build** - Build only when first query is made
-5. **Per-scene isolation** - Load only relevant data
-
-## Editor Architecture
-
-### Inspector Editors
-
-```
-LaneComponentEditorBase<T>
-    │
-    ├── PathComponentEditor
-    ├── IntersectionComponentEditor
-    └── TransitionComponentEditor
-```
-
-### Scene View Tools
-
-```
-LaneComponentTransformer
-    - Detects transform changes
-    - Triggers lane regeneration
-
-LaneComponentSelectionMonitor
-    - Tracks selected components
-    - Handles multi-selection
-
-LaneSnappingHandler
-    - Detects nearby endpoints
-    - Provides snap hints
-
-LaneGizmosDrawer
-    - Draws lane visualizations
-    - Distance-based LOD
-    - Color-coded by tag
-```
-
-## Extension Points
-
-### Custom Lane Tags
-
-```csharp
-[Flags]
-public enum LaneTags
-{
-    None = 0,
-    Vehicle = 1 << 0,
-    Pedestrian = 1 << 1,
-    Bicycle = 1 << 2,
-    Emergency = 1 << 3,
-    // Add your custom tags here
-    Custom1 = 1 << 8,
-    Custom2 = 1 << 9,
+    float Width;           // Physical width
+    LaneDirection Direction; // Forward/Backward
+    LaneTags Tags;         // Custom categories
+    float Speed;           // Speed limit
+    LaneState LaneState;   // Default state
 }
 ```
 
-### Custom Lane States
+**Tag System**
+Tags are flags enabling multiple categories per lane. Configure tag names in Project Settings > Lane Graph > Lane Tags section.
+
+**Example tags:**
+- Default (enabled by default)
+- Vehicle
+- Pedestrian
+- Emergency
+- Custom1, Custom2, etc.
+
+Tags enable filtering queries: "Find only vehicle lanes" or "Query pedestrian paths only."
+
+## Spatial Query System
+
+### Two-Level BVH
+
+LaneGraph uses hierarchical bounding volumes for O(log n) queries:
+
+**Level 1: Component BVH**
+Groups components spatially using axis-aligned bounding boxes. Quickly rejects distant components.
+
+**Level 2: Lane Queries**
+Within candidate components, performs point-to-lane distance calculations only for relevant lanes.
+
+### Query Performance
+
+```
+FindClosestLane(position):
+  1. BVH traversal → O(log n) candidate components
+  2. AABB distance checks → O(k) where k = candidates
+  3. Lane distance calculations → O(m) where m = lanes per component
+  
+Total: O(log n + k·m)
+```
+
+For typical scenes (n=1000 components, k=3-5 candidates, m=10 lanes):
+- Traditional linear search: ~10,000 lane checks
+- LaneGraph BVH: ~30-50 lane checks
+
+This 200-300x reduction enables real-time queries for large scenes.
+
+## Lane Connections
+
+Lanes connect through **LaneLinkers**:
+
+```csharp
+struct LaneLinker
+{
+    int LaneIndex;        // Target lane
+    LaneLinkType LinkType; // Connection type
+}
+```
+
+**Link Types:**
+- **Forward** - Natural continuation
+- **Merge** - Transition merge
+- **Split** - Transition split  
+- **Intersection** - Junction connection
+
+The system maintains a directed graph of connections, enabling pathfinding algorithms.
+
+## Lane States
+
+Lanes have operational states changed at runtime:
+
+- **Open** - Normal operation
+- **Closed** - Blocked/unavailable
+- **AboutToClose** - Warning (yellow light)
+- **Yield** - Proceed with caution
+
+The LaneStateController manages signal groups with automatic cycling:
+
+```
+Signal Group → [Lane1, Lane2, Lane3]
+├─ Green Duration: 30s
+├─ Yellow Duration: 3s
+└─ Current State: Open
+
+Timeline:
+[Open 30s] → [AboutToClose 3s] → [Closed] → [Open 30s] → ...
+```
+
+## Memory Layout
+
+### Runtime Data
+
+```csharp
+LaneGraphManager (Static)
+├─ Lane[] Lanes                    // All lanes
+├─ LaneComponentData[] Components  // Component metadata
+└─ int CurrentSceneIndex           // Active scene
+
+Lane Structure (per lane)
+├─ LaneConfiguration (20 bytes)
+├─ float3[] LanePoints (N × 12 bytes)
+├─ LaneLinker[] Connections (M × 8 bytes)
+└─ bool IsIntersectionLane (1 byte)
+```
+
+Memory scales linearly with lane count. Typical lane (20 points, 3 connections): ~300 bytes.
+
+### Build-Time Optimization
+
+The Graph Builder performs several optimizations:
+
+1. **Flattening** - Converts component hierarchy to flat arrays
+2. **Index Mapping** - Creates fast component→lane lookups
+3. **Boundary Precomputation** - Calculates AABBs once
+4. **Connection Resolution** - Resolves all lane connections upfront
+
+## Thread Safety
+
+LaneGraph is **not thread-safe**. All API calls must occur on the main thread.
+
+For multi-threaded workloads, copy lane data to local variables before dispatching work:
+
+```csharp
+// Main thread
+var points = LaneGraphManager.GetLanePoints(laneIndex);
+
+// Can now use 'points' safely on worker threads
+ThreadPool.QueueUserWorkItem(_ => ProcessPoints(points));
+```
+
+## Best Practices
+
+**Profile Design**
+- Create profiles for each road type (highway, street, path)
+- Keep lane counts reasonable (2-4 lanes typical)
+- Use consistent widths within profile types
+
+**Component Placement**
+- Position components at logical divisions
+- Split long paths at intersections
+- Use automatic snapping for clean connections
+
+**Query Optimization**
+- Cache lane indices when entities stick to lanes
+- Use appropriate maxDistance values (smaller = faster)
+- Apply tag filters to reduce candidate count
+
+**Performance**
+- Build graph once per play session
+- Avoid rebuilding at runtime
+- Query only when needed (lane changes, not every frame)
+
+## Extension Points
+
+### Custom Pathfinding
+Implement A* or your preferred algorithm using lane connections:
+
+```csharp
+public static int[] FindPath(int startLane, int goalLane)
+{
+    // Use LaneGraphManager.GetLaneLinkers() to get connections
+    // Implement your pathfinding logic
+    // Return lane index array
+}
+```
+
+### Custom State Logic
+Extend LaneState enum and implement custom controllers:
 
 ```csharp
 public enum LaneState
 {
+    // Built-in states
     Open = 0,
     Closed = 1,
-    AboutToClose = 2,
-    Yield = 3,
-    // Add your custom states here
-    Maintenance = 10,
-    Reserved = 11,
+    
+    // Your custom states
+    UnderConstruction = 10,
+    EmergencyVehicleOnly = 11,
 }
 ```
 
-### Custom Pathfinding
+### Event Integration
+React to state changes for AI, visuals, or gameplay:
 
 ```csharp
-// Implement your own pathfinding logic
-public static List<int> FindPath(int startLane, int endLane)
+LaneGraphManager.OnLaneStateChanged += (laneIndex, newState) =>
 {
-    // Use LaneGraphManager API to query lanes
-    // Implement A* or your preferred algorithm
-    // Return list of lane indices
-}
+    if (newState == LaneState.Closed)
+    {
+        // Reroute traffic
+        // Update visuals
+        // Notify AI systems
+    }
+};
 ```
-
-## Performance Considerations
-
-### Best Practices
-
-1. **Batch queries** - Group multiple queries together when possible
-2. **Cache results** - Store frequently used lane indices
-3. **Use appropriate maxDistance** - Smaller distances = faster queries
-4. **Leverage tag filtering** - Reduces candidate count
-5. **Initialize early** - Call Initialize() before first query
-6. **Build once per session** - Don't rebuild in play mode
-
-### Profiling Tips
-
-- Monitor `LaneGraphManager.Initialize()` time
-- Profile `FindClosestLaneIndex()` calls
-- Check BVH construction time with large networks
-- Measure memory usage of lane arrays
-
-### Scalability Limits
-
-- Tested with **50,000+ lanes** per scene
-- BVH can handle **10,000+ components** efficiently
-- Query performance remains consistent at scale
-- Memory scales linearly with lane count
-
-## Thread Safety
-
-LaneGraph is **not thread-safe** by default. Follow these guidelines:
-
-- **Main thread only**: All LaneGraphManager calls
-- **Read-only queries**: Safe after initialization
-- **State changes**: Must be on main thread
-- **Batch processing**: Can distribute work across frames
-
-For multi-threaded scenarios:
-```csharp
-// Store lane data in local variables
-var lanePoints = LaneGraphManager.GetLanePoints(laneIndex);
-
-// Process on worker thread
-ThreadPool.QueueUserWorkItem(_ =>
-{
-    // Use local copy safely
-    ProcessLanePoints(lanePoints);
-});
-```
-
-## Debugging Tools
-
-### Debug Logging
-
-```csharp
-// Enable verbose logging
-LaneGraphDebug.SetVerbosity(LogVerbosity.Verbose);
-
-// Log specific operations
-LaneGraphDebug.ConditionalLog("Custom message", LogVerbosity.Info);
-```
-
-### Visual Debugging
-
-```csharp
-// Enable visual debug features
-LaneGraphDebugSettings.ShowLaneBounds = true;
-LaneGraphDebugSettings.ShowLaneConnections = true;
-LaneGraphDebugSettings.ShowComponentIds = true;
-```
-
-### Gizmo Settings
-
-Adjust in `LaneGraphEditorSettings`:
-- MaxGizmoDrawDistance: Cull distant lanes
-- HandleSizeMagnitudeFactor: Adjust handle sizes
-- Lane color coding: Customize tag colors
 
 ---
 
-This architecture enables LaneGraph to provide high-performance lane-based navigation while maintaining flexibility and ease of use. Understanding these concepts will help you make the most of the system.
+This architecture enables LaneGraph to handle complex networks efficiently while remaining simple to integrate and extend.

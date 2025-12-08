@@ -1,184 +1,144 @@
-# Getting Started with LaneGraph
+# Quick Start
 
-This guide will walk you through setting up LaneGraph and creating your first lane network in Unity. By the end, you'll have a working lane system that you can query at runtime.
+This guide walks you through creating your first lane network in under 10 minutes.
 
 ## Prerequisites
 
 - Unity 2021.3 or later
-- LaneGraph package installed in your project
-- Basic familiarity with Unity Editor
+- LaneGraph package installed
 
-## Step 1: Open Project Settings
+## Create a Lane Profile
 
-Navigate to **Edit > Project Settings > Lane Graph** to open the LaneGraph project settings window.
+Lane Profiles define your lane structure. Create one in Project Settings:
 
-![Project Settings](../assets/project-settings.png)
+1. Open **Edit > Project Settings > Lane Graph**
+2. Click **Create New Profile**
+3. Name it "Basic Road"
+4. Click **Add Lane** twice
+5. Configure both lanes:
+   - Width: `3.5`
+   - Direction: `Forward`
+   - Tags: Enable `Default`
+   - Speed: `50`
+6. Click **Save**
 
-This is where you'll manage all your lane profiles.
+Your profile now contains two forward-facing lanes, each 3.5 units wide.
 
-## Step 2: Create Your First Lane Profile
+## Add a Path Component
 
-A Lane Profile defines the structure of your lanes. Let's create a simple two-lane road:
+Create your first path:
 
-1. Click **"Create New Profile"** button
-2. Name it "Two Lane Road"
-3. Click **"Add Lane"** twice to create two lanes
-4. Configure the lanes:
-   - **Lane 1**: Width: 3.5, Direction: Forward, Tags: Vehicle
-   - **Lane 2**: Width: 3.5, Direction: Forward, Tags: Vehicle
-5. Click **"Save"** to store the profile
+1. **GameObject > Lane > Path Lane**
+2. Select the new PathLane object
+3. In Inspector, assign your "Basic Road" profile
+4. The lanes appear in Scene view as colored lines
 
-Your profile is now ready to use on any lane component!
+## Shape the Path
 
-## Step 3: Create a Path Component
+Position and curve your path:
 
-Now let's add a path to your scene:
+1. Press **W** to activate the Move tool
+2. Drag the node spheres to reposition them
+3. In Inspector, set **Shape Type** to `AutoBezier`
+4. Add more nodes with **Add Node** button
+5. Drag nodes to create your desired path
 
-1. Right-click in the Hierarchy
-2. Select **GameObject > Lane > Path Lane**
-3. This creates a new GameObject with a PathComponent
+## Build the Lane Graph
 
-## Step 4: Configure the Path
+Before runtime use, build the graph data:
 
-With your path selected:
+1. **Tools > LaneGraph > Build LaneGraph**
+2. Wait for completion message
+3. Verify no errors in Console
 
-1. In the Inspector, find the **Lane Profile** dropdown
-2. Select your "Two Lane Road" profile
-3. The path will update to show two lanes
+> **Important:** Rebuild after any changes to lane components or profiles.
 
-You'll see the lanes visualized in the Scene view with colored lines representing your configured tags.
+## Query at Runtime
 
-## Step 5: Adjust the Path Shape
-
-You can modify the path's shape:
-
-1. Ensure the **Move Tool (W)** is selected
-2. Click on the node points (spheres) in the Scene view
-3. Drag them to reshape your path
-4. For curved paths:
-   - Change **Shape Type** to "Bezier" or "AutoBezier"
-   - Drag the tangent handles (smaller spheres) to adjust curves
-
-## Step 6: Add More Nodes
-
-To create a longer path:
-
-1. Select your path
-2. In the Inspector, click **"Add Node"**
-3. Position the new node in the Scene view
-4. Repeat as needed to create your desired path
-
-## Step 7: Create an Intersection
-
-Let's connect multiple paths:
-
-1. Right-click in Hierarchy > **GameObject > Lane > Intersection Lane**
-2. Assign your lane profile to the intersection
-3. Position the intersection where you want paths to meet
-4. In the Inspector, configure **Lane Connections** to define which lanes connect to which
-
-## Step 8: Build the Lane Graph
-
-Before you can use the lane network at runtime, you must build it:
-
-1. Navigate to **Tools > LaneGraph > Build LaneGraph**
-2. Wait for the build process to complete
-3. A success message will appear when done
-
-> **Important**: You must rebuild the lane graph whenever you make changes to your lane components!
-
-## Step 9: Initialize at Runtime
-
-Create a simple script to initialize and use the lane graph:
+Test your lane network with this script:
 
 ```csharp
 using UnityEngine;
 using LaneGraph;
-using Unity.Mathematics;
 
-public class LaneGraphExample : MonoBehaviour
+public class LaneTest : MonoBehaviour
 {
     void Start()
     {
-        // Initialize the lane graph for the current scene
+        // Initialize the system
         LaneGraphManager.Initialize();
         
-        // Find the closest lane to this position
-        float3 position = transform.position;
-        int closestLaneIndex = LaneGraphManager.FindClosestLaneIndex(position);
+        // Find closest lane
+        int laneIndex = LaneGraphManager.FindClosestLaneIndex(
+            transform.position,
+            maxDistance: 50f
+        );
         
-        if (closestLaneIndex >= 0)
+        if (laneIndex >= 0)
         {
-            Debug.Log($"Closest lane found: {closestLaneIndex}");
+            Debug.Log($"Found lane {laneIndex}");
             
-            // Get lane information
-            var lane = LaneGraphManager.GetLane(closestLaneIndex);
+            // Get lane data
+            var lane = LaneGraphManager.GetLane(laneIndex);
             if (lane.HasValue)
             {
-                Debug.Log($"Lane width: {lane.Value.LaneConfiguration.Width}");
-                Debug.Log($"Lane points: {lane.Value.LanePoints.Length}");
+                var points = lane.Value.LanePoints;
+                Debug.Log($"Lane has {points.Length} points");
             }
         }
     }
 }
 ```
 
-## Step 10: Test Your Network
-
-1. Attach your script to a GameObject in the scene
+1. Create empty GameObject, add this script
 2. Enter Play Mode
-3. Check the Console for debug messages
-4. Experiment with querying different positions
+3. Check Console for output
 
-## Common First-Time Issues
+## Troubleshooting
 
-### Lanes Not Appearing in Scene View
-- Ensure your lane profile has lanes added
-- Check that the profile is assigned to the component
-- Verify the component isn't hidden or on a hidden layer
+**Lanes don't appear in Scene**
+- Ensure profile is assigned
+- Check profile has lanes added
+- Verify component isn't hidden
 
-### "Scene not in build settings" Error
-- Go to **File > Build Settings**
-- Click **"Add Open Scenes"** to add your current scene
-- Rebuild the lane graph
+**"Scene not in build settings" error**
+- **File > Build Settings**
+- Click **Add Open Scenes**
+- Rebuild lane graph
 
-### Runtime Initialization Fails
-- Make sure you built the lane graph (Tools > LaneGraph > Build)
-- Verify the scene is in build settings
-- Check the Console for specific error messages
-
-### Lanes Don't Connect at Intersections
-- Use the snap feature by positioning components close together
-- Verify lane connections are configured in the intersection
-- Ensure matching lane profiles at connection points
+**No lane found at runtime**
+- Check object is within 50 units of path
+- Verify Initialize() was called
+- Ensure lane graph was built
 
 ## Next Steps
 
-Now that you have a basic understanding, explore:
+**Learn more:**
+- [Lane Profiles](manual/lane-profiles.md) - Configure complex lane setups
+- [Creating Paths](manual/tutorials/creating-paths.md) - Advanced path techniques
+- [Building Intersections](manual/tutorials/building-intersections.md) - Connect multiple paths
 
-- [Creating Paths Tutorial](tutorials/creating-paths.md) - Advanced path creation techniques
-- [Building Intersections Tutorial](tutorials/building-intersections.md) - Complex junction setups
-- [Lane Profiles Guide](lane-profiles.md) - Deep dive into profile configuration
-- [Runtime Queries Tutorial](tutorials/runtime-queries.md) - Advanced query techniques
+**Build something:**
+- Create a T-intersection connecting three paths
+- Design a circular track with multiple lanes
+- Add a highway on-ramp using a transition component
 
-## Quick Reference
+## Essential Shortcuts
 
-### Essential Keyboard Shortcuts
-- **W**: Move tool (required for editing lane nodes)
-- **F**: Frame selected component
-- **Ctrl+D**: Duplicate component
+- **W** - Move tool (required for node editing)
+- **F** - Frame selected component
+- **Ctrl+D** - Duplicate component
 
-### Essential Menu Items
-- **GameObject > Lane**: Create lane components
-- **Edit > Project Settings > Lane Graph**: Manage profiles
-- **Tools > LaneGraph > Build**: Build lane graph data
+## Key Concepts
 
-### Key Inspector Features
-- **Lane Profile Dropdown**: Assign profiles
-- **Shape Type**: Linear, AutoBezier, Bezier
-- **Add/Remove Node**: Manage path points
-- **Lane Connections**: Configure intersection routing
+**Lane Profile** - Reusable template defining lane count, widths, directions, and properties
+
+**Lane Component** - Scene object that generates lanes based on a profile
+
+**Lane Graph** - Runtime data structure built from all components in your scenes
+
+**BVH System** - Spatial acceleration structure enabling fast lane queries
 
 ---
 
-Congratulations! You've created your first lane network. Continue to the [tutorials](tutorials/basic-setup.md) for more advanced techniques.
+You've created your first lane network! Continue with the [tutorials](manual/tutorials/basic-setup.md) to explore advanced features.
