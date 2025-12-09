@@ -1,6 +1,6 @@
 # Core Concepts
 
-Understanding LaneGraph's architecture helps you build efficient lane networks and integrate them with your game systems.
+Understanding Lane Graph's architecture helps you build efficient lane networks and integrate them with your game systems.
 
 ## System Architecture
 
@@ -9,7 +9,7 @@ Editor Time                  Build Time                    Runtime
 ┌──────────────┐            ┌──────────────┐             ┌──────────────┐
 │ Components   │            │ Graph        │             │ Manager      │
 │ - Path       │───build───>│ Builder      │───creates──>│ - Initialize │
-│ - Intersection           │              │             │ - Query      │
+│ - Intersection            │(ScriptableObject)          │ - Query      │
 │ - Transition │            │              │             │ - Control    │
 └──────────────┘            └──────────────┘             └──────────────┘
        │                                                         │
@@ -27,7 +27,7 @@ Editor Time                  Build Time                    Runtime
 Create and configure components using visual tools. Each component references a Lane Profile and generates preview lanes in real-time.
 
 ### 2. Build Time
-The Graph Builder scans all scenes, collects component data, and generates optimized runtime structures:
+The Graph Builder scans all lanes in the scene, collects component data, and generates optimized runtime structures:
 - Flattened lane array
 - Component metadata
 - Scene index mapping
@@ -96,11 +96,11 @@ Lane Profiles are templates defining lane structure:
 ```csharp
 LaneConfiguration
 {
-    float Width;           // Physical width
+    float Width;             // Physical width
     LaneDirection Direction; // Forward/Backward
-    LaneTags Tags;         // Custom categories
-    float Speed;           // Speed limit
-    LaneState LaneState;   // Default state
+    LaneTags Tags;           // Custom categories
+    float Speed;             // Speed limit
+    LaneState LaneState;     // Default state (traffic signal control)
 }
 ```
 
@@ -170,9 +170,10 @@ The system maintains a directed graph of connections, enabling pathfinding algor
 Lanes have operational states changed at runtime:
 
 - **Open** - Normal operation
-- **Closed** - Blocked/unavailable
+- **Closed** - Blocked/unavailable (red light)
 - **AboutToClose** - Warning (yellow light)
 - **Yield** - Proceed with caution
+- and more.
 
 The LaneStateController manages signal groups with automatic cycling:
 
@@ -186,74 +187,10 @@ Timeline:
 [Open 30s] → [AboutToClose 3s] → [Closed] → [Open 30s] → ...
 ```
 
-## Memory Layout
-
-### Runtime Data
-
-```csharp
-LaneGraphManager (Static)
-├─ Lane[] Lanes                    // All lanes
-├─ LaneComponentData[] Components  // Component metadata
-└─ int CurrentSceneIndex           // Active scene
-
-Lane Structure (per lane)
-├─ LaneConfiguration (20 bytes)
-├─ float3[] LanePoints (N × 12 bytes)
-├─ LaneLinker[] Connections (M × 8 bytes)
-└─ bool IsIntersectionLane (1 byte)
-```
-
-Memory scales linearly with lane count. Typical lane (20 points, 3 connections): ~300 bytes.
-
-### Build-Time Optimization
-
-The Graph Builder performs several optimizations:
-
-1. **Flattening** - Converts component hierarchy to flat arrays
-2. **Index Mapping** - Creates fast component→lane lookups
-3. **Boundary Precomputation** - Calculates AABBs once
-4. **Connection Resolution** - Resolves all lane connections upfront
-
-## Thread Safety
-
-LaneGraph is **not thread-safe**. All API calls must occur on the main thread.
-
-For multi-threaded workloads, copy lane data to local variables before dispatching work:
-
-```csharp
-// Main thread
-var points = LaneGraphManager.GetLanePoints(laneIndex);
-
-// Can now use 'points' safely on worker threads
-ThreadPool.QueueUserWorkItem(_ => ProcessPoints(points));
-```
-
-## Best Practices
-
-**Profile Design**
-- Create profiles for each road type (highway, street, path)
-- Keep lane counts reasonable (2-4 lanes typical)
-- Use consistent widths within profile types
-
-**Component Placement**
-- Position components at logical divisions
-- Split long paths at intersections
-- Use automatic snapping for clean connections
-
-**Query Optimization**
-- Cache lane indices when entities stick to lanes
-- Use appropriate maxDistance values (smaller = faster)
-- Apply tag filters to reduce candidate count
-
-**Performance**
-- Build graph once per play session
-- Avoid rebuilding at runtime
-- Query only when needed (lane changes, not every frame)
-
 ## Extension Points
 
 ### Custom Pathfinding
-Implement A* or your preferred algorithm using lane connections:
+Implement A* from the plugin or your preferred algorithm using lane connections:
 
 ```csharp
 public static int[] FindPath(int startLane, int goalLane)

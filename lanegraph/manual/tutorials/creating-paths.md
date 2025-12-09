@@ -1,4 +1,4 @@
-# Tutorial: Creating Paths
+# Creating Paths
 
 Learn advanced techniques for creating and manipulating path components in LaneGraph.
 
@@ -141,39 +141,6 @@ Reverse lane direction:
 
 **Use case**: Create return lanes without rebuilding
 
-## Copying and Duplicating
-
-### Duplicate Entire Path
-
-1. Select path
-2. Press **Ctrl+D** (Windows) or **Cmd+D** (Mac)
-3. Move to new location
-4. Modify as needed
-
-### Mirror a Path
-
-1. Duplicate the path
-2. Move it to mirrored position
-3. Manually adjust nodes to create mirror image
-4. Or use Unity's scale tool with negative value
-
-## Path Length Considerations
-
-### Performance Tips
-
-- **Short paths** (< 10 nodes): Very fast, suitable for anywhere
-- **Medium paths** (10-50 nodes): Good performance, typical roads
-- **Long paths** (50-200 nodes): Still performant, use for highways
-- **Very long paths** (200+ nodes): Consider splitting into multiple paths
-
-### When to Split Paths
-
-Split long paths when:
-- Path has natural breaking points (intersections)
-- Performance optimization is needed
-- Different sections need different profiles
-- You want independent control of sections
-
 ## Snapping to Other Components
 
 ### Automatic Snapping
@@ -191,69 +158,6 @@ Adjust snap sensitivity in settings:
 - **Edit > Project Settings > Lane Graph > Editor Settings**
 - Find **SnapDistance** parameter
 - Default: 2.0 units
-
-## Practical Examples
-
-### Example 1: Highway On-Ramp
-
-```
-1. Create main highway (4 lanes, all forward)
-2. Create on-ramp path (2 lanes, forward)
-3. Position on-ramp endpoint near highway
-4. Snap will connect them
-5. Use transition component for smooth merge
-```
-
-### Example 2: Curved Race Track
-
-```
-1. Set Shape Type to AutoBezier
-2. Add 8-12 nodes around the track
-3. Position to create rough circle
-4. Connect first and last nodes manually
-5. Adjust individual nodes for interesting corners
-6. Use multiple lanes for racing lines
-```
-
-### Example 3: Mountain Road
-
-```
-1. Use Bezier shape type
-2. Add nodes at elevation changes
-3. Manually adjust tangents for realistic curves
-4. Consider narrow single lane width
-5. Vary speed limits for different sections
-```
-
-## Best Practices
-
-1. **Start Simple**: Begin with few nodes, add detail later
-2. **Use AutoBezier First**: Switch to manual Bezier only if needed
-3. **Consistent Node Spacing**: Easier to manipulate and looks better
-4. **Test at Runtime**: Verify path works with your movement system
-5. **Name Your Paths**: Use descriptive names in Hierarchy
-
-## Common Mistakes
-
-❌ Too many nodes too early
-✅ Start with key points, add detail incrementally
-
-❌ Extremely long single paths
-✅ Break into logical sections
-
-❌ Inconsistent lane widths
-✅ Use standard widths from lane profiles
-
-❌ Overlapping paths
-✅ Ensure adequate spacing
-
-## Keyboard Shortcuts
-
-- **W**: Move tool (essential for node editing)
-- **F**: Frame selected path
-- **Ctrl+D**: Duplicate path
-- **V**: Vertex snapping mode
-- **Ctrl**: Enable grid snapping (while dragging)
 
 ---
 

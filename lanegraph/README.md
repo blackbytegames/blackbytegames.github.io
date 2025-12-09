@@ -1,6 +1,6 @@
-# LaneGraph Documentation
+# Lane Graph Documentation
 
-**LaneGraph** is a lightweight lane-based navigation system for Unity. Build complex road networks with paths, intersections, and transitions using visual editor tools, then query them at runtime with high-performance spatial lookups.
+**Lane Graph** is a lightweight lane-based navigation system for Unity. Build complex road networks with paths, intersections, and transitions using visual editor tools, then query them at runtime with high-performance spatial lookups.
 
 ## Quick Links
 

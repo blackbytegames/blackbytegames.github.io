@@ -1,4 +1,4 @@
-# Tutorial: Traffic Control
+# Traffic Control
 
 Learn how to control lane states dynamically using the Lane State Controller for traffic lights and dynamic road conditions.
 
@@ -299,30 +299,6 @@ Phase 4: Opposite direction left turns
 Phase 1: Vehicle lanes green, crosswalk red
 Phase 2: All vehicles red, crosswalk green
 ```
-
-## Troubleshooting
-
-**Issue**: Signals don't cycle
-- Check "Begin Play On Start" is enabled
-- Verify signal groups have lane indices
-- Ensure LaneGraphManager is initialized
-
-**Issue**: Wrong lanes change
-- Double-check lane indices
-- Use debug visuals to verify
-- Build and test incrementally
-
-**Issue**: Timing seems off
-- Check green and yellow durations
-- Verify no overlapping signals
-- Test in slow motion if needed
-
-## Performance Considerations
-
-- State changes are O(1) operations
-- Controllers poll on Update() - keep count reasonable
-- Visualizations only active in editor with flag enabled
-- Multiple controllers work independently
 
 ## Next Steps
 

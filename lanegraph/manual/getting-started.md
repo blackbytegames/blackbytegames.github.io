@@ -1,10 +1,10 @@
 # Quick Start
 
-This guide walks you through creating your first lane network in under 10 minutes.
+This guide walks you through creating your first lane network in under 2 minutes.
 
 ## Prerequisites
 
-- Unity 2021.3 or later
+- Unity 2019.1 or later
 - LaneGraph package installed
 
 ## Create a Lane Profile
@@ -37,10 +37,10 @@ Create your first path:
 
 Position and curve your path:
 
-1. Press **W** to activate the Move tool
-2. Drag the node spheres to reposition them
+1. Select the path component to activate the Move tool
+2. Drag the node spheres (blue spheres typically at the start and end of the lane component) to reposition them
 3. In Inspector, set **Shape Type** to `AutoBezier`
-4. Add more nodes with **Add Node** button
+4. Add more nodes with the ** Add Node** button
 5. Drag nodes to create your desired path
 
 ## Build the Lane Graph
@@ -48,7 +48,7 @@ Position and curve your path:
 Before runtime use, build the graph data:
 
 1. **Tools > LaneGraph > Build LaneGraph**
-2. Wait for completion message
+2. Wait for the completion message
 3. Verify no errors in Console
 
 > **Important:** Rebuild after any changes to lane components or profiles.
@@ -90,7 +90,7 @@ public class LaneTest : MonoBehaviour
 }
 ```
 
-1. Create empty GameObject, add this script
+1. Create an empty GameObject, add this script
 2. Enter Play Mode
 3. Check Console for output
 
@@ -122,12 +122,6 @@ public class LaneTest : MonoBehaviour
 - Create a T-intersection connecting three paths
 - Design a circular track with multiple lanes
 - Add a highway on-ramp using a transition component
-
-## Essential Shortcuts
-
-- **W** - Move tool (required for node editing)
-- **F** - Frame selected component
-- **Ctrl+D** - Duplicate component
 
 ## Key Concepts
 

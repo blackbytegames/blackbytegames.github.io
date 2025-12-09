@@ -92,8 +92,7 @@ FindClosestLaneIndex(pos, tags: LaneTags.Vehicle);
 
 **Limit intersection complexity:**
 - 3-way or 4-way intersections: Standard
-- 5-6 way intersections: Use carefully
-- 7+ way: Consider redesign or multiple intersections
+- 5-6 or more way intersections: Use carefully
 
 ### Initialization
 
@@ -157,15 +156,10 @@ void OnDrawGizmos()
 ### Debugging Approach
 
 **Enable debug logs in Project Settings:**
+- Enable 'ENABLE_LANEGRAPH_DEBUGGING' symbol in Project Settings > Lane graph > Editor Settings > Under Debug Settings
 - Set verbosity level to `Verbose` during development
 - Check console for component creation messages
 - Review initialization logs for issues
-
-**Check common failure points:**
-1. Scene in build settings?
-2. Lane graph built?
-3. Initialize() called?
-4. Components have valid profiles?
 
 ## Component-Specific Tips
 
@@ -351,24 +345,6 @@ void OnPositionChanged()
     cachedNearbyLanes = LaneGraphManager.FindLanesInRadius(pos, 100f);
 }
 ```
-
-## Performance Targets
-
-**Initialization:**
-- Small scenes (< 100 components): < 10ms
-- Medium scenes (100-500 components): < 50ms
-- Large scenes (500-2000 components): < 200ms
-
-**Queries:**
-- Closest lane: < 0.1ms typical
-- Radius search (50 units): < 0.5ms typical
-- Large radius (200+ units): Consider caching
-
-**State changes:**
-- Individual lane: < 0.01ms
-- Batch updates (10+ lanes): < 0.1ms
-
-If exceeding these targets, review component counts and query patterns.
 
 ## Documentation
 

@@ -1,13 +1,14 @@
-# Tutorial: Lane Transitions
+# Lane Transitions
 
-Lane transitions handle merges and splits - where the number of lanes changes. This tutorial covers the Transition Component.
+Lane transitions handle merges and splits – where the number of lanes changes. This tutorial covers the Transition Component.
 
 ## What are Lane Transitions?
 
 Transitions are used when:
 - **Merging**: Multiple lanes combine into fewer lanes
 - **Splitting**: One lane divides into multiple lanes
-- **Common scenarios**: Highway on-ramps, lane reductions, exit ramps
+
+**Common scenarios**: Highway on-ramps, lane reductions, exit ramps
 
 ## Creating a Transition
 
@@ -92,7 +93,7 @@ Split Configuration:
 
 ### Positioning Nodes
 
-1. Use Move Tool (W)
+1. Use Move Tool
 2. Position start node where transition begins
 3. Position end node where transition completes
 4. Distance determines transition smoothness
@@ -169,96 +170,19 @@ Split Configuration:
   - Lanes 0, 1 continue straight
 ```
 
-## Visual Indicators
-
-### In Scene View
-
-- **Color gradients**: Show lane merging/splitting
-- **Transition curves**: Smooth lane path changes
-- **Node spheres**: Start and end points
-- **Tangent handles**: Adjust curve smoothness
-
-### Debugging Transitions
-
-Check these visually:
-- Lanes don't cross unexpectedly
-- Smooth curve progression
-- No abrupt angle changes
-- Proper spacing at both ends
-
-## Best Practices
-
-1. **Realistic Lengths**: Match real-world transition distances
-2. **Gradual Changes**: Avoid very short transitions
-3. **Test Both Directions**: Consider traffic flow both ways
-4. **Profile Planning**: Ensure start/end lane counts match configuration
-5. **Snapping**: Snap to paths for seamless connections
-
-## Common Mistakes
-
-❌ **Too short**: Creates unrealistic sharp angle changes
-✅ **Appropriate length**: 30-50 units for highway speeds
-
-❌ **Wrong indices**: Merge configuration doesn't match profile
-✅ **Verify indices**: Check profile lane count before configuring
-
-❌ **No space for vehicles**: Transition too tight for turning
-✅ **Test with vehicles**: Place vehicles to verify clearance
-
-## Performance Tips
-
-- Transitions generate intermediate lanes automatically
-- More complex transitions = more generated lanes
-- Keep transitions simple when possible
-- Use multiple simpler transitions vs one complex
-
 ## Connecting to Other Components
 
 ### To Paths
 
 1. Position transition endpoint near path start/end
 2. Automatic snapping will connect them
-3. Verify lane counts match
+3. Verify lane properties match
 
 ### To Intersections
 
 1. Transitions can connect to intersection nodes
 2. Useful for complex junction entries/exits
 3. Ensure profile compatibility
-
-## Advanced Techniques
-
-### Stacked Transitions
-
-Create multiple transitions in sequence:
-```
-Path → Transition 1 → Transition 2 → Path
-```
-
-Use case: Multi-stage lane changes
-
-### Curved Transitions
-
-1. Add intermediate nodes
-2. Shape the transition path
-3. Merge/split still works along curve
-
-## Troubleshooting
-
-**Issue**: Lanes overlap or cross
-- Increase transition length
-- Adjust node spacing
-- Check merge/split configuration
-
-**Issue**: Abrupt lane changes
-- Make transition longer
-- Verify tangent handles are smooth
-- Check profile lane widths
-
-**Issue**: Can't configure merge/split
-- Verify profile has sufficient lanes
-- Check Enable checkboxes are ticked
-- Ensure indices are within range
 
 ## Next Steps
 

@@ -137,10 +137,6 @@ using LaneGraph;
 using Unity.Mathematics; // For float3
 ```
 
-## Thread Safety
-
-LaneGraph is **not thread-safe**. All API calls must be made from the main Unity thread.
-
 ## Performance Notes
 
 - Queries use BVH acceleration structure

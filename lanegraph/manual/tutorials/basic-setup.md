@@ -4,7 +4,7 @@ In this tutorial, you'll learn how to set up a simple lane network from scratch.
 
 ## Prerequisites
 
-- LaneGraph installed in your Unity project
+- Lane Graph installed in your Unity project
 - Empty scene ready
 
 ## Step 1: Create a Lane Profile
@@ -43,13 +43,13 @@ First, we need to define what our lanes will look like.
 
 ## Step 4: Position the Path
 
-1. Use the **Move Tool (W)**
+1. Use the **Move Tool**
 2. Position your path where you want it in the scene
 3. The initial path has two nodes at the start and end
 
-## Step 5: Add Nodes for a Curve
+## Step 5: Add Nodes for Extended Path
 
-Let's make our path curved:
+Let's make our path extended:
 
 1. With PathLane selected, click **"Add Node"** in the Inspector
 2. This adds a new node at the end of the path
@@ -59,7 +59,7 @@ Now you have 4 nodes total.
 
 ## Step 6: Shape the Curve
 
-1. Make sure **Move Tool (W)** is active
+1. Make sure **Move Tool** is active
 2. In the Inspector, change **Shape Type** to `AutoBezier`
 3. In the Scene view, click and drag the middle nodes to create a curve
 4. The system automatically creates smooth curves between nodes
@@ -156,36 +156,6 @@ public class LaneTest : MonoBehaviour
 5. Position the target near your lane
 6. Enter Play Mode
 7. Check the Console for output
-
-## Expected Results
-
-You should see:
-- "Lane Graph Initialized!" message
-- Information about the closest lane found
-- Lane width and point count
-
-## Troubleshooting
-
-**Issue**: Lanes don't appear in Scene view
-- **Solution**: Make sure the Lane Profile is assigned and has lanes configured
-
-**Issue**: "Scene not in build settings" error when building
-- **Solution**: Go to File > Build Settings, click "Add Open Scenes"
-
-**Issue**: No lane found at runtime
-- **Solution**: Ensure target is within reasonable distance of the path (< 100 units)
-
-**Issue**: Build fails with errors
-- **Solution**: Check Console for specific errors, ensure all components have valid profiles
-
-## What You Learned
-
-In this tutorial, you:
-- Created a lane profile
-- Added a path component to your scene
-- Shaped the path using nodes
-- Built the lane graph data
-- Queried lanes at runtime
 
 ## Next Steps
 

@@ -1,4 +1,4 @@
-# Tutorial: Building Intersections
+# Building Intersections
 
 Intersections are where multiple paths meet. This tutorial covers creating and configuring intersection components.
 
@@ -26,7 +26,7 @@ An intersection in LaneGraph:
 
 ### Step 3: Position Node Points
 
-1. Ensure Move Tool (W) is active
+1. Ensure Move Tool  is active
 2. Click and drag each node point (numbered spheres)
 3. Position them where incoming roads will connect
 4. Typically space them evenly for balanced intersections
@@ -169,80 +169,6 @@ Setup:
 When to use intersection vs transition:
   - Intersection: Different directions, traffic control
   - Transition: Same direction, lane count change
-```
-
-## Visualization and Debugging
-
-### In Scene View
-
-You'll see:
-- **Node spheres**: Clickable/draggable points
-- **Tangent handles**: Small spheres for curve control
-- **Lane curves**: Generated lanes between nodes
-- **Connection lines**: Shows configured connections
-
-### Color Coding
-
-- **Green**: Valid connection
-- **Red**: Invalid/missing connection  
-- **Blue**: Selected node
-- **Gray**: Unselected nodes
-
-## Best Practices
-
-1. **Start with Node Positions**: Get spatial layout right first
-2. **Use Same Profile Initially**: Start simple, specialize later
-3. **Test Each Connection**: Build and test incrementally
-4. **Symmetric is Easier**: Start with symmetric layouts
-5. **Name Your Nodes**: Use descriptive names for clarity
-
-## Troubleshooting
-
-**Issue**: Lanes don't connect properly
-- Verify connection indices are correct (0-based)
-- Check node points are positioned correctly
-- Ensure lane indices exist in profiles
-
-**Issue**: Curves look wrong
-- Try enabling Adaptive Tangent
-- Manually adjust tangent handles
-- Check node point spacing
-
-**Issue**: Missing lanes in visualization
-- Verify profile is assigned
-- Check lane connections are configured
-- Rebuild lane graph
-
-## Performance Considerations
-
-- **4-way intersections**: ~16 lanes generated
-- **Complex 6-way**: Can generate 50+ lanes
-- **Impact**: Minimal on queries, but visible in editor
-
-Optimize by:
-- Only creating necessary connections
-- Using simpler profiles where possible
-- Splitting very complex junctions
-
-## Practical Example: City Block
-
-Let's build a complete city intersection:
-
-```
-Step 1: Create intersection at origin
-Step 2: Create 4-node cross layout
-Step 3: Assign "City Street" profile (2 lanes each direction)
-Step 4: Configure connections:
-  
-  North node:
-    Lane 0 (going south) → South node, Lane 0
-    Lane 0 → East node, Lane 0 (right turn)
-    Lane 1 (going south) → West node, Lane 1 (left turn)
-  
-  (Repeat for East, South, West nodes)
-
-Step 5: Connect paths to each node
-Step 6: Build and test
 ```
 
 ## Next Steps

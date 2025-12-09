@@ -1,4 +1,4 @@
-# Tutorial: Runtime Queries
+# Runtime Queries
 
 Master the LaneGraphManager API to query lanes, find paths, and integrate with your game systems.
 
@@ -8,7 +8,6 @@ Always initialize before querying:
 
 ```csharp
 using LaneGraph;
-using Unity.Mathematics;
 
 public class MyLaneSystem : MonoBehaviour
 {
